@@ -2,7 +2,10 @@ package me.desertfox.dgen.chunk;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.desertfox.dgen.chunk.gens.ConnectedDoorsGenerator;
+import me.desertfox.dgen.chunk.gens.SimpleGenerator;
 import me.desertfox.dgen.chunk.gens.VoidGenerator;
+import me.desertfox.dgen.chunk.gens.WeightedSimpleGenerator;
 import me.desertfox.dgen.room.ActiveRoom;
 import me.desertfox.dgen.room.RoomSchematic;
 import me.desertfox.dgen.schematic.OperationalSchematic;
@@ -19,8 +22,21 @@ public abstract class ChunkGenerator {
 
     @Getter private static HashMap<String, Class<? extends ChunkGenerator>> GENERATOR_REGISTRY = new HashMap<>();
 
+    static {
+        register(SimpleGenerator.class);
+        register(VoidGenerator.class);
+        register(WeightedSimpleGenerator.class);
+        register(ConnectedDoorsGenerator.class);
+    }
+
     public static Class<? extends ChunkGenerator> findByClassName(String name){
         return GENERATOR_REGISTRY.getOrDefault(name, VoidGenerator.class);
+    }
+
+    public static void register(Class<? extends ChunkGenerator> generator){
+        if(!GENERATOR_REGISTRY.containsKey(generator.getSimpleName())){
+            GENERATOR_REGISTRY.put(generator.getSimpleName(), generator);
+        }
     }
 
     @Getter private DungeonChunk chunk;
@@ -28,14 +44,7 @@ public abstract class ChunkGenerator {
 
     public ChunkGenerator(DungeonChunk chunk){
         this.chunk = chunk;
-        register();
         roomPool = new ArrayList<>(RoomSchematic.getRooms().stream().map(RoomSchematic::getSchematicName).toList());
-    }
-
-    public void register(){
-        if(!GENERATOR_REGISTRY.containsKey(getClass().getSimpleName())){
-            GENERATOR_REGISTRY.put(getClass().getSimpleName(), getClass());
-        }
     }
 
     public ActiveRoom safeBuild(String schematicName, Location start){

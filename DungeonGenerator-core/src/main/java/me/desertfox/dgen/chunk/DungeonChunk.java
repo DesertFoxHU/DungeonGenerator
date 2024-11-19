@@ -5,6 +5,7 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import lombok.Getter;
 
+import lombok.Setter;
 import me.desertfox.dgen.Dungeon;
 import me.desertfox.dgen.room.ActiveRoom;
 import me.desertfox.dgen.utils.Cuboid;
@@ -29,6 +30,7 @@ public class DungeonChunk {
     private final int endY;
     private final int endZ;
     private final Cuboid region;
+    @Setter private boolean debug;
     public List<ActiveRoom> rooms = new ArrayList<>();
     public ChunkGenerator generator;
 
@@ -46,10 +48,11 @@ public class DungeonChunk {
         setGenerator(generatorClass);
     }
 
-    public void setGenerator(Class<? extends ChunkGenerator> generatorClass){
+    public void setGenerator(Class<? extends ChunkGenerator> generatorClass) {
         try {
             this.generator = generatorClass.getConstructor(DungeonChunk.class).newInstance(this);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }
@@ -64,22 +67,14 @@ public class DungeonChunk {
     }
 
     private final List<Location> startHere = new ArrayList<>();
-    public void populate(boolean debug, Class<? extends ChunkGenerator> generator){
+    public void populate(){
         new Cuboid(getStart(), getEnd()).clearRegion();
         if(debug){
             drawDebug2DBox();
         }
 
         if(indexX != 0 || indexY != 0) return;
-
-        ChunkGenerator gen;
-        try{
-            gen = generator.getConstructor(DungeonChunk.class).newInstance(this);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
-
-        gen.begin(getStart());
+        generator.begin(getStart());
     }
 
     public void drawDebug2DBox(){

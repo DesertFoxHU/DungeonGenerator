@@ -5,6 +5,7 @@ import me.desertfox.dgen.chunk.ChunkGenerator;
 import me.desertfox.dgen.chunk.DungeonChunk;
 import me.desertfox.dgen.chunk.gens.ConnectedDoorsGenerator;
 import me.desertfox.dgen.chunk.gens.SimpleGenerator;
+import me.desertfox.dgen.chunk.gens.VoidGenerator;
 import me.desertfox.dgen.chunk.gens.WeightedSimpleGenerator;
 import me.desertfox.dgen.utils.Utils;
 import org.bukkit.Bukkit;
@@ -109,9 +110,9 @@ public class Dungeon {
                 }
 
                 for (int i = 0; i < chunksPerTick; i++) {
-                    DungeonChunk chunk = chunkQueue.poll(); // Retrieve and remove the head of the queue
+                    DungeonChunk chunk = chunkQueue.poll();
                     if (chunk != null) {
-                        chunk.populate(true, ConnectedDoorsGenerator.class);
+                        chunk.populate();
                     }
                 }
             }
@@ -119,12 +120,12 @@ public class Dungeon {
     }
 
     private void setupCells(){
-        Location curr = start.clone().add(1, 0, 1);
+        Location curr = start.clone().add(0, 0, 0);
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
-                cells[i][j] = new DungeonChunk(this, SimpleGenerator.class,
+                cells[i][j] = new DungeonChunk(this, VoidGenerator.class,
                         i, j, curr.getBlockX(), curr.getBlockY(), curr.getBlockZ(),
-                        curr.getBlockX() + CHUNKS_SIZE_X, end.getBlockY(), curr.getBlockZ() + CHUNKS_SIZE_Z);
+                        curr.getBlockX() + CHUNKS_SIZE_X - 1, end.getBlockY(), curr.getBlockZ() + CHUNKS_SIZE_Z - 1);
                 curr = curr.add(CHUNKS_SIZE_X, 0, 0);
             }
             curr.setX(start.getBlockX());
@@ -140,6 +141,10 @@ public class Dungeon {
 
     public void generateAll(boolean debug, Class<? extends ChunkGenerator> generator){
         for (DungeonChunk[] cell : cells) {
+            for(DungeonChunk chunk : cell){
+                chunk.setDebug(debug);
+                chunk.setGenerator(generator);
+            }
             chunkQueue.addAll(Arrays.asList(cell));
         }
     }
