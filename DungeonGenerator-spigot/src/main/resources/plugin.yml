@@ -1,0 +1,7 @@
+main: me.desertfox.dgen.DungeonGenerator
+name: DungeonGenerator
+version: ${project.version}
+api-version: 1.20
+commands:
+  generate:
+  schema:
