@@ -2,6 +2,7 @@ package me.desertfox.dgen.chunk;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.desertfox.dgen.chunk.gens.VoidGenerator;
 import me.desertfox.dgen.room.ActiveRoom;
 import me.desertfox.dgen.room.RoomSchematic;
 import me.desertfox.dgen.schematic.OperationalSchematic;
@@ -18,6 +19,10 @@ public abstract class ChunkGenerator {
 
     @Getter private static HashMap<String, Class<? extends ChunkGenerator>> GENERATOR_REGISTRY = new HashMap<>();
 
+    public static Class<? extends ChunkGenerator> findByClassName(String name){
+        return GENERATOR_REGISTRY.getOrDefault(name, VoidGenerator.class);
+    }
+
     @Getter private DungeonChunk chunk;
     @Setter protected List<String> roomPool;
 
@@ -28,8 +33,8 @@ public abstract class ChunkGenerator {
     }
 
     public void register(){
-        if(!GENERATOR_REGISTRY.containsKey(getClass().getName())){
-            GENERATOR_REGISTRY.put(getClass().getName(), getClass());
+        if(!GENERATOR_REGISTRY.containsKey(getClass().getSimpleName())){
+            GENERATOR_REGISTRY.put(getClass().getSimpleName(), getClass());
         }
     }
 

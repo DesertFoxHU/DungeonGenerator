@@ -2,6 +2,7 @@ package me.desertfox.dgen;
 
 import me.desertfox.dgen.commands.GenerateCommand;
 import me.desertfox.dgen.commands.SchematicCommand;
+import me.desertfox.dgen.commands.tab.GenerateCommandTab;
 import me.desertfox.dgen.room.RoomSchematic;
 import me.desertfox.dgen.schematic.framework.SchematicController;
 import org.bukkit.Bukkit;
@@ -32,6 +33,7 @@ public class DungeonGenerator extends JavaPlugin {
         Bukkit.getLogger().info("Loaded " + dungeon.getId() + " dungeon!");
 
         getCommand("generate").setExecutor(new GenerateCommand());
+        getCommand("generate").setTabCompleter(new GenerateCommandTab());
         getCommand("schema").setExecutor(new SchematicCommand());
 
         PluginManager pm = Bukkit.getPluginManager();
