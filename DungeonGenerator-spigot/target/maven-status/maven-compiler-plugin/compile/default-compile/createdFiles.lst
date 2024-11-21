@@ -1,0 +1,4 @@
+me\desertfox\dgen\commands\GenerateCommand.class
+me\desertfox\dgen\commands\SchematicCommand.class
+me\desertfox\dgen\DungeonGenerator.class
+me\desertfox\dgen\commands\tab\GenerateCommandTab.class

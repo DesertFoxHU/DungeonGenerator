@@ -1,0 +1,63 @@
+schematic:
+  doors: SN
+  relative_corner:
+    pos1: 0 0 0
+    pos2: -3 -4 -3
+  list:
+  - 0 0 0 0 minecraft:stone
+  - -1 -1 0 0 minecraft:stone
+  - -2 -2 0 0 minecraft:polished_andesite
+  - -3 -3 0 0 minecraft:stone
+  - 0 0 -1 0 minecraft:polished_andesite
+  - -3 -3 -1 0 minecraft:stone
+  - 0 0 -2 0 minecraft:stone
+  - -3 -3 -2 0 minecraft:stone_bricks
+  - 0 0 -3 0 minecraft:stone
+  - -3 -3 -3 0 minecraft:polished_andesite
+  - 0 0 -4 0 minecraft:stone
+  - -1 -1 -4 0 minecraft:stone
+  - -2 -2 -4 0 minecraft:polished_andesite
+  - -3 -3 -4 0 minecraft:stone
+  - 0 0 0 -1 minecraft:polished_andesite
+  - -1 -1 0 -1 minecraft:cracked_stone_bricks
+  - -2 -2 0 -1 minecraft:stone
+  - -3 -3 0 -1 minecraft:stone
+  - 0 0 -1 -1 minecraft:stone
+  - -3 -3 -1 -1 minecraft:cracked_stone_bricks
+  - 0 0 -2 -1 minecraft:stone_bricks
+  - -3 -3 -2 -1 minecraft:stone
+  - 0 0 -3 -1 minecraft:cracked_stone_bricks
+  - -3 -3 -3 -1 minecraft:stone
+  - 0 0 -4 -1 minecraft:stone
+  - -1 -1 -4 -1 minecraft:stone
+  - -2 -2 -4 -1 minecraft:cracked_stone_bricks
+  - -3 -3 -4 -1 minecraft:stone
+  - 0 0 0 -2 minecraft:stone
+  - -1 -1 0 -2 minecraft:stone
+  - -2 -2 0 -2 minecraft:cracked_stone_bricks
+  - -3 -3 0 -2 minecraft:stone
+  - 0 0 -1 -2 minecraft:cracked_stone_bricks
+  - -3 -3 -1 -2 minecraft:stone
+  - 0 0 -2 -2 minecraft:polished_andesite
+  - -1 -1 -2 -2 minecraft:wall_torch[facing=east]
+  - -3 -3 -2 -2 minecraft:stone
+  - 0 0 -3 -2 minecraft:stone
+  - -3 -3 -3 -2 minecraft:stone
+  - 0 0 -4 -2 minecraft:stone
+  - -1 -1 -4 -2 minecraft:stone
+  - -2 -2 -4 -2 minecraft:stone
+  - -3 -3 -4 -2 minecraft:stone
+  - 0 0 0 -3 minecraft:stone
+  - -1 -1 0 -3 minecraft:polished_andesite
+  - -2 -2 0 -3 minecraft:stone
+  - -3 -3 0 -3 minecraft:stone
+  - 0 0 -1 -3 minecraft:stone
+  - -3 -3 -1 -3 minecraft:polished_andesite
+  - 0 0 -2 -3 minecraft:stone
+  - -3 -3 -2 -3 minecraft:stone_bricks
+  - 0 0 -3 -3 minecraft:polished_andesite
+  - -3 -3 -3 -3 minecraft:stone
+  - 0 0 -4 -3 minecraft:stone
+  - -1 -1 -4 -3 minecraft:stone
+  - -2 -2 -4 -3 minecraft:stone
+  - -3 -3 -4 -3 minecraft:stone
