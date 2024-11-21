@@ -3,7 +3,7 @@ package me.desertfox.dgen.chunk.gens;
 import me.desertfox.dgen.Direction4;
 import me.desertfox.dgen.chunk.ChunkGenerator;
 import me.desertfox.dgen.chunk.DungeonChunk;
-import me.desertfox.dgen.room.ActiveRoom;
+import me.desertfox.dgen.room.AbstractRoom;
 import me.desertfox.dgen.room.RoomSchematic;
 import me.desertfox.gl.Commons;
 import net.minecraft.util.Tuple;
@@ -13,7 +13,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class ConnectedDoorsGenerator extends ChunkGenerator {
@@ -55,11 +54,11 @@ public class ConnectedDoorsGenerator extends ChunkGenerator {
                 if(Commons.roll(23)) chosen = RoomSchematic.findByName("wall_4x4");
                 call(chosen.getSchematicName(), key.b());
             }
-        }.runTaskTimer(getChunk().getDungeon().getPlugin(), 0, 2L);
+        }.runTaskTimer(getChunk().getDungeon().getPlugin(), 0, 20L);
     }
 
     private void call(String schematicName, Location start){
-        ActiveRoom room = safeBuild(schematicName, start);
+        AbstractRoom room = safeBuild(schematicName, start);
         if(room != null){
             for(Direction4 dir4 : RoomSchematic.findByName(room.getSchematicName()).getDoors()){
                 Location l = start.clone().add(dir4.vector.getX() * (room.getRegion().getSizeX()+1), 0, dir4.vector.getZ() * room.getRegion().getSizeZ());

@@ -19,17 +19,12 @@ public class DungeonGenerator extends JavaPlugin {
         instance = this;
 
         SchematicController.init(this, "schemas");
-
-        new RoomSchematic(this, "corridor_SN", Direction4.SOUTH, Direction4.NORTH);
-        new RoomSchematic(this, "corridor_WE", Direction4.WEST, Direction4.EAST);
-        new RoomSchematic(this, "corridor_WESN", Direction4.NORTH, Direction4.EAST, Direction4.WEST, Direction4.SOUTH);
-        new RoomSchematic(this, "wall_4x4");
-        new RoomSchematic(this, "garage_W", Direction4.WEST);
+        RoomSchematic.IOLoadAll(this, "schemas");
         Bukkit.getLogger().info("Loaded " + RoomSchematic.getRooms().size() + " rooms!");
 
         Dungeon dungeon = new Dungeon.Builder(this, "test",
                 new Location(Bukkit.getWorld("world"), 0, 65, 0),
-                200, 200, 200).build();
+                200, 200, 200).setMinRoomSizeXZ(4).build();
         Bukkit.getLogger().info("Loaded " + dungeon.getId() + " dungeon!");
 
         getCommand("generate").setExecutor(new GenerateCommand());

@@ -1,15 +1,11 @@
 package me.desertfox.dgen.room;
 
-import lombok.Getter;
+import me.desertfox.dgen.chunk.DungeonChunk;
 import me.desertfox.dgen.utils.Cuboid;
+import org.bukkit.Location;
 
-public class ActiveRoom {
-
-    @Getter private final String schematicName;
-    @Getter private final Cuboid region;
-
-    public ActiveRoom(String schematicName, Cuboid region) {
-        this.schematicName = schematicName;
-        this.region = region;
+public class ActiveRoom extends AbstractRoom {
+    public ActiveRoom(DungeonChunk chunk, String schematicName, Location location, Cuboid region) {
+        super(chunk, schematicName, location, region);
     }
 }

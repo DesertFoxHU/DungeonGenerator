@@ -104,9 +104,10 @@ public class SchematicController {
     Structure struct = (Structure) structure.getBlock().getState();
     struct.setBoundingBoxVisible(true);
     struct.setUsageMode(UsageMode.SAVE);
-    struct.setStructureName(yml.file.getName());
+    struct.setStructureName(yml.getConfig().getName());
     struct.setRelativePosition(new BlockVector(1, 1, 1));
-    struct.setStructureSize(new BlockVector(c.getSizeX(), c.getSizeY(), c.getSizeZ()));
+    struct.setStructureSize(new BlockVector(c.getSizeX()+1, c.getSizeY()+1, c.getSizeZ()));
+    struct.update();
   }
 
   private static OperationalSchematic loadSchematic(CustomYml yml) {

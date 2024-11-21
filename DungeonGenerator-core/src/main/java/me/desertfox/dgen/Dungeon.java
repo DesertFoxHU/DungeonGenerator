@@ -3,12 +3,7 @@ package me.desertfox.dgen;
 import lombok.Getter;
 import me.desertfox.dgen.chunk.ChunkGenerator;
 import me.desertfox.dgen.chunk.DungeonChunk;
-import me.desertfox.dgen.chunk.gens.ConnectedDoorsGenerator;
-import me.desertfox.dgen.chunk.gens.SimpleGenerator;
 import me.desertfox.dgen.chunk.gens.VoidGenerator;
-import me.desertfox.dgen.chunk.gens.WeightedSimpleGenerator;
-import me.desertfox.dgen.utils.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,6 +27,7 @@ public class Dungeon {
         private Location end;
         public int CHUNK_SIZE_X = 32;
         public int CHUNK_SIZE_Z = 32;
+        public int MIN_ROOM_SIZE_XZ = 4;
 
         public Builder(JavaPlugin plugin, String id, Location start, int sizeX, int sizeY, int sizeZ){
             this.plugin = plugin;
@@ -47,24 +43,28 @@ public class Dungeon {
             this.end = end.clone();
         }
 
-        /**
-         * @param val Must be power of 2
-         */
-        public void chunkSizeX(int val){
-            assert(Utils.isPowerOfTwo(val));
+        public Dungeon.Builder chunkSizeX(int val){
             this.CHUNK_SIZE_X = val;
+            return this;
+        }
+
+        public Dungeon.Builder chunkSizeZ(int val){
+            this.CHUNK_SIZE_Z = val;
+            return this;
         }
 
         /**
-         * @param val Must be power of 2
+         * @param val How big the smallest room is? The default value is 4x4
          */
-        public void chunkSizeZ(int val){
-            assert(Utils.isPowerOfTwo(val));
-            this.CHUNK_SIZE_Z = val;
+        public Dungeon.Builder setMinRoomSizeXZ(int val){
+            val = Math.abs(val);
+            assert(val > 0);
+            this.MIN_ROOM_SIZE_XZ = val;
+            return this;
         }
 
         public Dungeon build(){
-            return new Dungeon(plugin, id, start, end, CHUNK_SIZE_X, CHUNK_SIZE_Z);
+            return new Dungeon(plugin, id, start, end, CHUNK_SIZE_X, CHUNK_SIZE_Z, MIN_ROOM_SIZE_XZ);
         }
     }
 
@@ -77,6 +77,8 @@ public class Dungeon {
     @Getter private int chunkCountZ = 0;
     public int MAX_CHUNK_BATCH = 4;
 
+    public final int MIN_ROOM_SIZE_XZ;
+
     /**
      * A Chunk's size in X,Z dimensions
      */
@@ -85,11 +87,12 @@ public class Dungeon {
 
     private final Queue<DungeonChunk> chunkQueue = new LinkedList<>();
 
-    protected Dungeon(JavaPlugin plugin, String id, Location start, Location end, int CHUNKS_SIZE_X, int CHUNKS_SIZE_Z) {
+    protected Dungeon(JavaPlugin plugin, String id, Location start, Location end, int CHUNKS_SIZE_X, int CHUNKS_SIZE_Z, int MIN_ROOM_SIZE_XZ) {
         this.plugin = plugin;
         this.id = id;
         this.start = start;
         this.end = end;
+        this.MIN_ROOM_SIZE_XZ = MIN_ROOM_SIZE_XZ;
         this.CHUNKS_SIZE_X = CHUNKS_SIZE_X;
         this.CHUNKS_SIZE_Z = CHUNKS_SIZE_Z;
 
@@ -134,10 +137,6 @@ public class Dungeon {
     }
 
     public World getWorld() { return start.getWorld(); }
-
-    public void clean(){
-
-    }
 
     public void generateAll(boolean debug, Class<? extends ChunkGenerator> generator){
         for (DungeonChunk[] cell : cells) {

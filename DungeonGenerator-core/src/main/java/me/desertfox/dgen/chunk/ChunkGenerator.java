@@ -6,6 +6,7 @@ import me.desertfox.dgen.chunk.gens.ConnectedDoorsGenerator;
 import me.desertfox.dgen.chunk.gens.SimpleGenerator;
 import me.desertfox.dgen.chunk.gens.VoidGenerator;
 import me.desertfox.dgen.chunk.gens.WeightedSimpleGenerator;
+import me.desertfox.dgen.room.AbstractRoom;
 import me.desertfox.dgen.room.ActiveRoom;
 import me.desertfox.dgen.room.RoomSchematic;
 import me.desertfox.dgen.schematic.OperationalSchematic;
@@ -47,7 +48,7 @@ public abstract class ChunkGenerator {
         roomPool = new ArrayList<>(RoomSchematic.getRooms().stream().map(RoomSchematic::getSchematicName).toList());
     }
 
-    public ActiveRoom safeBuild(String schematicName, Location start){
+    public AbstractRoom safeBuild(String schematicName, Location start){
         RoomSchematic firstRoom = RoomSchematic.findByName(schematicName);
         OperationalSchematic schematic = SchematicController.get(firstRoom.getSchematicName());
         Cuboid cuboid = schematic.getCuboid(start, new Vector(0,0,0));
@@ -58,8 +59,7 @@ public abstract class ChunkGenerator {
             return null;
         }
         schematic.populate(start, new Vector(0,0,0));
-        ActiveRoom room = new ActiveRoom(schematicName, cuboid);
-        chunk.getRooms().add(room);
+        AbstractRoom room = new ActiveRoom(chunk, schematicName, start, cuboid);
         return room;
     }
 

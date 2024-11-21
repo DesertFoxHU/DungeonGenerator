@@ -1,16 +1,14 @@
 package me.desertfox.dgen.chunk;
 
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.Region;
 import lombok.Getter;
 
 import lombok.Setter;
 import me.desertfox.dgen.Dungeon;
-import me.desertfox.dgen.room.ActiveRoom;
+import me.desertfox.dgen.room.AbstractRoom;
 import me.desertfox.dgen.utils.Cuboid;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -31,7 +29,7 @@ public class DungeonChunk {
     private final int endZ;
     private final Cuboid region;
     @Setter private boolean debug;
-    public List<ActiveRoom> rooms = new ArrayList<>();
+    public AbstractRoom[][] roomGrid;
     public ChunkGenerator generator;
 
     public DungeonChunk(Dungeon dungeon, Class<? extends ChunkGenerator> generatorClass, int indexX, int indexY, int coordX, int coordY, int coordZ, int endX, int endY, int endZ) {
@@ -45,6 +43,17 @@ public class DungeonChunk {
         this.endY = endY;
         this.endZ = endZ;
         region = new Cuboid(getStart(), getEnd());
+
+        int rows = region.getSizeZ() / getDungeon().MIN_ROOM_SIZE_XZ;
+        int cols = region.getSizeX() / getDungeon().MIN_ROOM_SIZE_XZ;
+
+        roomGrid = new AbstractRoom[rows][cols];
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                roomGrid[row][col] = null;
+            }
+        }
+
         setGenerator(generatorClass);
     }
 
@@ -57,10 +66,70 @@ public class DungeonChunk {
         }
     }
 
+    /**
+     * Returns the room present on a grid
+     * @param location Physical (non-relative) location
+     * @return
+     */
+    public @Nullable AbstractRoom getRoomOnGrid(Location location){
+        int relativeX = location.getBlockX() - dungeon.getStart().getBlockX();
+        int relativeZ = location.getBlockZ() - dungeon.getStart().getBlockZ();
+
+        int col = relativeX / getDungeon().MIN_ROOM_SIZE_XZ;
+        int row = relativeZ / getDungeon().MIN_ROOM_SIZE_XZ;
+
+        if (row < 0 || row >= roomGrid.length || col < 0 || col >= roomGrid[0].length) {
+            return null; // Out of bounds
+        }
+
+        return roomGrid[row][col];
+    }
+
+    public List<AbstractRoom> getNeighbors(AbstractRoom room) {
+        List<AbstractRoom> neighbors = new ArrayList<>();
+        Location location = room.getLocation();
+        AbstractRoom currentRoom = getRoomOnGrid(location);
+
+        if (currentRoom == null) {
+            return neighbors;
+        }
+
+        int relativeX = location.getBlockX() - dungeon.getStart().getBlockX();
+        int relativeZ = location.getBlockZ() - dungeon.getStart().getBlockZ();
+        int col = relativeX / dungeon.MIN_ROOM_SIZE_XZ;
+        int row = relativeZ / dungeon.MIN_ROOM_SIZE_XZ;
+
+        int[][] directions = {
+                {-1, 0}, // North
+                {1, 0},  // South
+                {0, -1}, // West
+                {0, 1}   // East
+        };
+
+        for (int[] dir : directions) {
+            int neighborRow = row + dir[0];
+            int neighborCol = col + dir[1];
+
+            if (neighborRow >= 0 && neighborRow < roomGrid.length &&
+                    neighborCol >= 0 && neighborCol < roomGrid[0].length) {
+
+                AbstractRoom neighbor = roomGrid[neighborRow][neighborCol];
+                if (neighbor != null) {
+                    neighbors.add(neighbor);
+                }
+            }
+        }
+
+        return neighbors;
+    }
+
     public boolean doHitOtherRoom(Cuboid cuboid){
-        for(ActiveRoom room : rooms){
-            if(room.getRegion().isCollidingWith(cuboid)){
-                return true;
+        for(AbstractRoom[] rooms : roomGrid){
+            for(AbstractRoom room : rooms){
+                if(room == null) continue;
+                if(room.getRegion().isCollidingWith(cuboid)){
+                    return true;
+                }
             }
         }
         return false;
