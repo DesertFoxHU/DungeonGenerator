@@ -24,9 +24,9 @@ public class Dungeon {
         private final JavaPlugin plugin;
         private final String id;
         private final Location start;
-        private Location end;
-        public int CHUNK_SIZE_X = 32;
-        public int CHUNK_SIZE_Z = 32;
+        private final Location end;
+        public int SHARD_SIZE_X = 32;
+        public int SHARD_SIZE_Z = 32;
         public int MIN_ROOM_SIZE_XZ = 4;
 
         public Builder(JavaPlugin plugin, String id, Location start, int sizeX, int sizeY, int sizeZ){
@@ -43,13 +43,18 @@ public class Dungeon {
             this.end = end.clone();
         }
 
+        /**
+         * Set how many shards
+         * @param val
+         * @return
+         */
         public Dungeon.Builder chunkSizeX(int val){
-            this.CHUNK_SIZE_X = val;
+            this.SHARD_SIZE_X = val;
             return this;
         }
 
         public Dungeon.Builder chunkSizeZ(int val){
-            this.CHUNK_SIZE_Z = val;
+            this.SHARD_SIZE_Z = val;
             return this;
         }
 
@@ -64,7 +69,7 @@ public class Dungeon {
         }
 
         public Dungeon build(){
-            return new Dungeon(plugin, id, start, end, CHUNK_SIZE_X, CHUNK_SIZE_Z, MIN_ROOM_SIZE_XZ);
+            return new Dungeon(plugin, id, start, end, SHARD_SIZE_X, SHARD_SIZE_Z, MIN_ROOM_SIZE_XZ);
         }
     }
 
@@ -73,39 +78,39 @@ public class Dungeon {
     @Getter private final Location start;
     @Getter private final Location end;
     @Getter private DungeonShard[][] cells;
-    @Getter private int chunkCountX = 0;
-    @Getter private int chunkCountZ = 0;
-    public int MAX_CHUNK_BATCH = 4;
+    @Getter private int shardCountX = 0;
+    @Getter private int shardCountZ = 0;
+    public int MAX_SHARD_BATCH = 4;
 
     public final int MIN_ROOM_SIZE_XZ;
 
     /**
      * A Chunk's size in X,Z dimensions
      */
-    private int CHUNKS_SIZE_X = 32;
-    private int CHUNKS_SIZE_Z = 32;
+    private int SHARD_SIZE_X = 32;
+    private int SHARD_SIZE_Z = 32;
 
     private final Queue<DungeonShard> chunkQueue = new LinkedList<>();
 
-    protected Dungeon(JavaPlugin plugin, String id, Location start, Location end, int CHUNKS_SIZE_X, int CHUNKS_SIZE_Z, int MIN_ROOM_SIZE_XZ) {
+    protected Dungeon(JavaPlugin plugin, String id, Location start, Location end, int SHARD_SIZE_X, int SHARD_SIZE_Z, int MIN_ROOM_SIZE_XZ) {
         this.plugin = plugin;
         this.id = id;
         this.start = start;
         this.end = end;
         this.MIN_ROOM_SIZE_XZ = MIN_ROOM_SIZE_XZ;
-        this.CHUNKS_SIZE_X = CHUNKS_SIZE_X;
-        this.CHUNKS_SIZE_Z = CHUNKS_SIZE_Z;
+        this.SHARD_SIZE_X = SHARD_SIZE_X;
+        this.SHARD_SIZE_Z = SHARD_SIZE_Z;
 
-        chunkCountX = (int) Math.ceil(Math.abs((double)end.subtract(start).getBlockX()/CHUNKS_SIZE_X));
-        chunkCountZ = (int) Math.ceil(Math.abs((double)end.subtract(start).getBlockZ()/CHUNKS_SIZE_Z));
+        shardCountX = (int) Math.ceil(Math.abs((double)end.subtract(start).getBlockX()/ SHARD_SIZE_X));
+        shardCountZ = (int) Math.ceil(Math.abs((double)end.subtract(start).getBlockZ()/ SHARD_SIZE_Z));
 
-        cells = new DungeonShard[chunkCountX][chunkCountZ];
+        cells = new DungeonShard[shardCountX][shardCountZ];
 
         setupCells();
         dungeons.add(this);
 
         new BukkitRunnable() {
-            final int chunksPerTick = MAX_CHUNK_BATCH;
+            final int chunksPerTick = MAX_SHARD_BATCH;
             @Override
             public void run() {
                 if (chunkQueue.isEmpty()) {
@@ -128,11 +133,11 @@ public class Dungeon {
             for (int j = 0; j < cells[i].length; j++) {
                 cells[i][j] = new DungeonShard(this, VoidGenerator.class,
                         i, j, curr.getBlockX(), curr.getBlockY(), curr.getBlockZ(),
-                        curr.getBlockX() + CHUNKS_SIZE_X - 1, end.getBlockY(), curr.getBlockZ() + CHUNKS_SIZE_Z - 1);
-                curr = curr.add(CHUNKS_SIZE_X, 0, 0);
+                        curr.getBlockX() + SHARD_SIZE_X - 1, end.getBlockY(), curr.getBlockZ() + SHARD_SIZE_Z - 1);
+                curr = curr.add(SHARD_SIZE_X, 0, 0);
             }
             curr.setX(start.getBlockX());
-            curr = curr.add(0, 0, CHUNKS_SIZE_Z);
+            curr = curr.add(0, 0, SHARD_SIZE_Z);
         }
     }
 

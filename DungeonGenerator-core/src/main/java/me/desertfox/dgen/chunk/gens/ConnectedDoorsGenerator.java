@@ -54,7 +54,7 @@ public class ConnectedDoorsGenerator extends ChunkGenerator {
                 if(Commons.roll(23)) chosen = RoomSchematic.findByName("wall_4x4");
                 call(chosen.getSchematicName(), key.b());
             }
-        }.runTaskTimer(getChunk().getDungeon().getPlugin(), 0, 20L);
+        }.runTaskTimer(getShard().getDungeon().getPlugin(), 0, 20L);
     }
 
     private void call(String schematicName, Location start){

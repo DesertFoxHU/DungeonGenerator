@@ -28,10 +28,10 @@ public class WeightedSimpleGenerator extends ChunkGenerator {
     public void begin(Location start) {
         safeBuild("corridor_WESN", start);
 
-        int minX = Math.min(start.getBlockX(), getChunk().getEnd().getBlockX());
-        int maxX = Math.max(start.getBlockX(), getChunk().getEnd().getBlockX());
-        int minZ = Math.min(start.getBlockZ(), getChunk().getEnd().getBlockZ());
-        int maxZ = Math.max(start.getBlockZ(), getChunk().getEnd().getBlockZ());
+        int minX = Math.min(start.getBlockX(), getShard().getEnd().getBlockX());
+        int maxX = Math.max(start.getBlockX(), getShard().getEnd().getBlockX());
+        int minZ = Math.min(start.getBlockZ(), getShard().getEnd().getBlockZ());
+        int maxZ = Math.max(start.getBlockZ(), getShard().getEnd().getBlockZ());
 
         int sizeX = 4;
         int sizeZ = 4;
@@ -39,7 +39,7 @@ public class WeightedSimpleGenerator extends ChunkGenerator {
         for (int x = minX; x <= maxX; x += sizeX) {
             for (int z = minZ; z <= maxZ; z += sizeZ) {
                 if (x + sizeX - 1 <= maxX && z + sizeZ - 1 <= maxZ) {
-                    Location buildingStart = new Location(getChunk().getDungeon().getWorld(), x, start.getY(), z);
+                    Location buildingStart = new Location(getShard().getDungeon().getWorld(), x, start.getY(), z);
                     safeBuild(draw(), buildingStart);
                 }
             }

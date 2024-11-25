@@ -8,6 +8,9 @@ import org.bukkit.Location;
 
 import java.util.List;
 
+/**
+ * Represents a generated room on the grid
+ */
 public abstract class AbstractRoom {
 
     @Getter private final DungeonShard chunk;

@@ -58,6 +58,10 @@ public class DungeonShard {
         setGenerator(generatorClass);
     }
 
+    /**
+     * Sets a new generator but doesn't start the generation process
+     * @param generatorClass Generator
+     */
     public void setGenerator(Class<? extends ChunkGenerator> generatorClass) {
         try {
             this.generator = generatorClass.getConstructor(DungeonShard.class).newInstance(this);
@@ -68,9 +72,9 @@ public class DungeonShard {
     }
 
     /**
-     * Returns the room present on a grid
+     * Returns the room present on a grid or null if not
      * @param location Physical (non-relative) location
-     * @return
+     * @return The AbstractRoom on the grid position
      */
     public @Nullable AbstractRoom getRoomOnGrid(Location location){
         int relativeX = location.getBlockX() - dungeon.getStart().getBlockX();
@@ -86,6 +90,25 @@ public class DungeonShard {
         return roomGrid[row][col];
     }
 
+    /**
+     * Checks if a location (non-relative) is on the grid
+     * @param location The location to check
+     * @return True if it's on the grid
+     */
+    public boolean isOnGrid(Location location){
+        int relativeX = location.getBlockX() - dungeon.getStart().getBlockX();
+        int relativeZ = location.getBlockZ() - dungeon.getStart().getBlockZ();
+
+        int col = relativeX / getDungeon().MIN_ROOM_SIZE_XZ;
+        int row = relativeZ / getDungeon().MIN_ROOM_SIZE_XZ;
+
+        return row >= 0 && row < roomGrid.length && col >= 0 && col < roomGrid[0].length; // Out of bounds
+    }
+
+    /**
+     * @param room
+     * @return A list of a room's neighbors or an empty list
+     */
     public List<AbstractRoom> getNeighbors(AbstractRoom room) {
         List<AbstractRoom> neighbors = new ArrayList<>();
         Location location = room.getLocation();
@@ -124,6 +147,11 @@ public class DungeonShard {
         return neighbors;
     }
 
+    /**
+     * @param location Non-relative location
+     * @param direction The direction we are searching
+     * @return An AbstractRoom if exist or null
+     */
     public @Nullable AbstractRoom getNeighbor(Location location, Direction4 direction) {
         if (location == null || direction == null) {
             return null;
@@ -174,6 +202,11 @@ public class DungeonShard {
         return getNeighbor(location, direction);
     }
 
+    /**
+     * Checks if any other room collides with the given cuboid
+     * @param cuboid input
+     * @return true if the cuboid collides with other rooms
+     */
     public boolean doHitOtherRoom(Cuboid cuboid){
         for(AbstractRoom[] rooms : roomGrid){
             for(AbstractRoom room : rooms){
@@ -187,6 +220,10 @@ public class DungeonShard {
     }
 
     private final List<Location> startHere = new ArrayList<>();
+    /**
+     * Starts the generator to populate the specific shard (chunk)<br>
+     * The code first clears the area then starts the generation process
+     */
     public void populate(){
         new Cuboid(getStart(), getEnd()).clearRegion();
         if(debug){
@@ -197,6 +234,10 @@ public class DungeonShard {
         generator.begin(getStart());
     }
 
+    /**
+     * Draw manually the 2D hollow box below the shard<br>
+     * It is used for debug purposes
+     */
     public void drawDebug2DBox(){
         int minX = Math.min(coordX, endX);
         int maxX = Math.max(coordX, endX);

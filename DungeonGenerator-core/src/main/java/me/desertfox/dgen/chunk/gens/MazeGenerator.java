@@ -41,14 +41,14 @@ public class MazeGenerator extends ChunkGenerator {
 
                 call(next);
             }
-        }.runTaskTimer(getChunk().getDungeon().getPlugin(), 0, 20L);
+        }.runTaskTimer(getShard().getDungeon().getPlugin(), 0, 20L);
     }
 
     private void call(Location start){
         List<Direction4> doors = new ArrayList<>();
         for(Direction4 dir4 : Direction4.values()){
             Direction4 flip = Direction4.flip(dir4);
-            AbstractRoom aroom = getChunk().getNeighbor(start, dir4);
+            AbstractRoom aroom = getShard().getNeighbor(start, dir4);
             if(aroom == null) continue;
             if(aroom.getDoors().contains(flip)){
                 doors.add(flip);
