@@ -20,4 +20,43 @@ __DungeonGenerator__ is a library designed to facilitate random dungeon generati
 - Predefined rooms: pre-generate specific rooms, such as boss rooms, in designated locations.
 
 ## Library usage
-(WIP)
+### Please note this is under heavy development, don't use in production
+
+First initialize the SchematicController.class then load all the saved schematics there:
+```java
+import me.desertfox.dgen.schematic.framework.SchematicController;
+import me.desertfox.dgen.room.RoomSchematic;
+
+private static final String SCHEM_DIR = "schematics";
+
+public void onEnable(){
+  SchematicController.init(this, SCHEM_DIR);
+  RoomSchematic.init(this, SCHEM_DIR);
+}
+```
+
+To create your first dungeon use:
+```java
+... onEnable(){
+  Location dungeonStart = new Location(world, 0, 100, 0);
+  int size = 200;
+  Dungeon dungeon = new Dungeon.Builder(this, "yourId", dungeonStart, size, size, size).build();
+}
+```
+
+To generate all of your dungeon:
+```java
+... onEnable(){
+  Dungeon dungeon = Dungeon.findById("yourId");
+  dungeon.generateAll(isDebug, ChunkGenerator.class); //Replace ChunkGenerator.class with your generator class or choose one from the (me.desertfox.dgen.chunk.gens) directory
+}
+```
+
+### How it works?
+When you make a new dungeon instance the system will generate **DungeonShards** by your configuration<br>
+every Shard is like a chunk in minecraft, it helps manage bigger dungeons in the cost of higher memory usage.<br>
+<br>
+By default a shard is 32x32 block (but you can configure this in the Dungeon.Builder class), shards stored grid-like in the Dungeon.class<br>
+and the Shard stores the rooms also in grid-like solution<br>
+<br>
+The shards' room grid will have (SHARD_SIZE_XZ / ROOM_MIN_SIZE_XZ) count, the rooms' smallest size is 4x4 by default (it can be overwritten)
