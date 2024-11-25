@@ -2,7 +2,7 @@ package me.desertfox.dgen;
 
 import lombok.Getter;
 import me.desertfox.dgen.chunk.ChunkGenerator;
-import me.desertfox.dgen.chunk.DungeonChunk;
+import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.dgen.chunk.gens.VoidGenerator;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -72,7 +72,7 @@ public class Dungeon {
     @Getter private final String id;
     @Getter private final Location start;
     @Getter private final Location end;
-    @Getter private DungeonChunk[][] cells;
+    @Getter private DungeonShard[][] cells;
     @Getter private int chunkCountX = 0;
     @Getter private int chunkCountZ = 0;
     public int MAX_CHUNK_BATCH = 4;
@@ -85,7 +85,7 @@ public class Dungeon {
     private int CHUNKS_SIZE_X = 32;
     private int CHUNKS_SIZE_Z = 32;
 
-    private final Queue<DungeonChunk> chunkQueue = new LinkedList<>();
+    private final Queue<DungeonShard> chunkQueue = new LinkedList<>();
 
     protected Dungeon(JavaPlugin plugin, String id, Location start, Location end, int CHUNKS_SIZE_X, int CHUNKS_SIZE_Z, int MIN_ROOM_SIZE_XZ) {
         this.plugin = plugin;
@@ -99,7 +99,7 @@ public class Dungeon {
         chunkCountX = (int) Math.ceil(Math.abs((double)end.subtract(start).getBlockX()/CHUNKS_SIZE_X));
         chunkCountZ = (int) Math.ceil(Math.abs((double)end.subtract(start).getBlockZ()/CHUNKS_SIZE_Z));
 
-        cells = new DungeonChunk[chunkCountX][chunkCountZ];
+        cells = new DungeonShard[chunkCountX][chunkCountZ];
 
         setupCells();
         dungeons.add(this);
@@ -113,7 +113,7 @@ public class Dungeon {
                 }
 
                 for (int i = 0; i < chunksPerTick; i++) {
-                    DungeonChunk chunk = chunkQueue.poll();
+                    DungeonShard chunk = chunkQueue.poll();
                     if (chunk != null) {
                         chunk.populate();
                     }
@@ -126,7 +126,7 @@ public class Dungeon {
         Location curr = start.clone().add(0, 0, 0);
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
-                cells[i][j] = new DungeonChunk(this, VoidGenerator.class,
+                cells[i][j] = new DungeonShard(this, VoidGenerator.class,
                         i, j, curr.getBlockX(), curr.getBlockY(), curr.getBlockZ(),
                         curr.getBlockX() + CHUNKS_SIZE_X - 1, end.getBlockY(), curr.getBlockZ() + CHUNKS_SIZE_Z - 1);
                 curr = curr.add(CHUNKS_SIZE_X, 0, 0);
@@ -139,8 +139,8 @@ public class Dungeon {
     public World getWorld() { return start.getWorld(); }
 
     public void generateAll(boolean debug, Class<? extends ChunkGenerator> generator){
-        for (DungeonChunk[] cell : cells) {
-            for(DungeonChunk chunk : cell){
+        for (DungeonShard[] cell : cells) {
+            for(DungeonShard chunk : cell){
                 chunk.setDebug(debug);
                 chunk.setGenerator(generator);
             }

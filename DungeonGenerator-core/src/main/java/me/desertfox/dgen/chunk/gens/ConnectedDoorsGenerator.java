@@ -2,7 +2,7 @@ package me.desertfox.dgen.chunk.gens;
 
 import me.desertfox.dgen.Direction4;
 import me.desertfox.dgen.chunk.ChunkGenerator;
-import me.desertfox.dgen.chunk.DungeonChunk;
+import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.dgen.room.AbstractRoom;
 import me.desertfox.dgen.room.RoomSchematic;
 import me.desertfox.gl.Commons;
@@ -17,7 +17,7 @@ import java.util.Random;
 
 public class ConnectedDoorsGenerator extends ChunkGenerator {
 
-    public ConnectedDoorsGenerator(DungeonChunk chunk) {
+    public ConnectedDoorsGenerator(DungeonShard chunk) {
         super(chunk);
         roomPool.clear();
         roomPool.add("corridor_WESN");

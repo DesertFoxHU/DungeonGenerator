@@ -2,10 +2,7 @@ package me.desertfox.dgen.chunk;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.desertfox.dgen.chunk.gens.ConnectedDoorsGenerator;
-import me.desertfox.dgen.chunk.gens.SimpleGenerator;
-import me.desertfox.dgen.chunk.gens.VoidGenerator;
-import me.desertfox.dgen.chunk.gens.WeightedSimpleGenerator;
+import me.desertfox.dgen.chunk.gens.*;
 import me.desertfox.dgen.room.AbstractRoom;
 import me.desertfox.dgen.room.ActiveRoom;
 import me.desertfox.dgen.room.RoomSchematic;
@@ -16,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,6 +26,7 @@ public abstract class ChunkGenerator {
         register(VoidGenerator.class);
         register(WeightedSimpleGenerator.class);
         register(ConnectedDoorsGenerator.class);
+        register(MazeGenerator.class);
     }
 
     public static Class<? extends ChunkGenerator> findByClassName(String name){
@@ -40,10 +39,10 @@ public abstract class ChunkGenerator {
         }
     }
 
-    @Getter private DungeonChunk chunk;
+    @Getter private DungeonShard chunk;
     @Setter protected List<String> roomPool;
 
-    public ChunkGenerator(DungeonChunk chunk){
+    public ChunkGenerator(DungeonShard chunk){
         this.chunk = chunk;
         roomPool = new ArrayList<>(RoomSchematic.getRooms().stream().map(RoomSchematic::getSchematicName).toList());
     }
@@ -59,7 +58,7 @@ public abstract class ChunkGenerator {
             return null;
         }
         schematic.populate(start, new Vector(0,0,0));
-        AbstractRoom room = new ActiveRoom(chunk, schematicName, start, cuboid);
+        AbstractRoom room = new ActiveRoom(chunk, schematicName, start, cuboid, Arrays.asList(firstRoom.getDoors()));
         return room;
     }
 

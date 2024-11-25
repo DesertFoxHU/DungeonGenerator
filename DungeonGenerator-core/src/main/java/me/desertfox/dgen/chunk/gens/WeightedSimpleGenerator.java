@@ -1,9 +1,7 @@
 package me.desertfox.dgen.chunk.gens;
 
-import com.mysql.cj.protocol.InternalDate;
 import me.desertfox.dgen.chunk.ChunkGenerator;
-import me.desertfox.dgen.chunk.DungeonChunk;
-import me.desertfox.dgen.room.RoomSchematic;
+import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.gl.Commons;
 import org.bukkit.Location;
 
@@ -21,7 +19,7 @@ public class WeightedSimpleGenerator extends ChunkGenerator {
         put("wall_4x4", 5d);
     }};
 
-    public WeightedSimpleGenerator(DungeonChunk chunk) {
+    public WeightedSimpleGenerator(DungeonShard chunk) {
         super(chunk);
         roomPool.clear();
     }

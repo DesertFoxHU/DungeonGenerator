@@ -1,14 +1,12 @@
 package me.desertfox.dgen.chunk.gens;
 
 import me.desertfox.dgen.chunk.ChunkGenerator;
-import me.desertfox.dgen.chunk.DungeonChunk;
+import me.desertfox.dgen.chunk.DungeonShard;
 import org.bukkit.Location;
-
-import java.util.Random;
 
 public class VoidGenerator extends ChunkGenerator {
 
-    public VoidGenerator(DungeonChunk chunk) {
+    public VoidGenerator(DungeonShard chunk) {
         super(chunk);
         roomPool.clear();
     }

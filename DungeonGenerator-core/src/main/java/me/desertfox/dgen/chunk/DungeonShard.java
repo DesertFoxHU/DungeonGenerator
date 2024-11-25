@@ -3,6 +3,7 @@ package me.desertfox.dgen.chunk;
 import lombok.Getter;
 
 import lombok.Setter;
+import me.desertfox.dgen.Direction4;
 import me.desertfox.dgen.Dungeon;
 import me.desertfox.dgen.room.AbstractRoom;
 import me.desertfox.dgen.utils.Cuboid;
@@ -17,7 +18,7 @@ import java.util.*;
  * Represents a physical chunk for Dungeons
  */
 @Getter
-public class DungeonChunk {
+public class DungeonShard {
     private final Dungeon dungeon;
     private final int indexX;
     private final int indexY;
@@ -32,7 +33,7 @@ public class DungeonChunk {
     public AbstractRoom[][] roomGrid;
     public ChunkGenerator generator;
 
-    public DungeonChunk(Dungeon dungeon, Class<? extends ChunkGenerator> generatorClass, int indexX, int indexY, int coordX, int coordY, int coordZ, int endX, int endY, int endZ) {
+    public DungeonShard(Dungeon dungeon, Class<? extends ChunkGenerator> generatorClass, int indexX, int indexY, int coordX, int coordY, int coordZ, int endX, int endY, int endZ) {
         this.dungeon = dungeon;
         this.indexX = indexX;
         this.indexY = indexY;
@@ -59,7 +60,7 @@ public class DungeonChunk {
 
     public void setGenerator(Class<? extends ChunkGenerator> generatorClass) {
         try {
-            this.generator = generatorClass.getConstructor(DungeonChunk.class).newInstance(this);
+            this.generator = generatorClass.getConstructor(DungeonShard.class).newInstance(this);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
             throw new RuntimeException(e);
@@ -121,6 +122,56 @@ public class DungeonChunk {
         }
 
         return neighbors;
+    }
+
+    public @Nullable AbstractRoom getNeighbor(Location location, Direction4 direction) {
+        if (location == null || direction == null) {
+            return null;
+        }
+
+        int relativeX = location.getBlockX() - dungeon.getStart().getBlockX();
+        int relativeZ = location.getBlockZ() - dungeon.getStart().getBlockZ();
+        int col = relativeX / dungeon.MIN_ROOM_SIZE_XZ;
+        int row = relativeZ / dungeon.MIN_ROOM_SIZE_XZ;
+
+        switch (direction) {
+            case NORTH:
+                row -= 1;
+                break;
+            case SOUTH:
+                row += 1;
+                break;
+            case WEST:
+                col -= 1;
+                break;
+            case EAST:
+                col += 1;
+                break;
+            default:
+                return null;
+        }
+
+        if (row >= 0 && row < roomGrid.length &&
+                col >= 0 && row < roomGrid[0].length) {
+
+            return roomGrid[row][col];
+        }
+        return null;
+    }
+
+    public @Nullable AbstractRoom getNeighbor(AbstractRoom room, Direction4 direction) {
+        if (room == null || direction == null) {
+            return null;
+        }
+
+        Location location = room.getLocation();
+        AbstractRoom currentRoom = getRoomOnGrid(location);
+
+        if (currentRoom == null) {
+            return null;
+        }
+
+        return getNeighbor(location, direction);
     }
 
     public boolean doHitOtherRoom(Cuboid cuboid){

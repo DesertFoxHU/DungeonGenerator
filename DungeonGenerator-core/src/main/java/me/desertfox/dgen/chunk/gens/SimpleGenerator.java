@@ -1,15 +1,14 @@
 package me.desertfox.dgen.chunk.gens;
 
 import me.desertfox.dgen.chunk.ChunkGenerator;
-import me.desertfox.dgen.chunk.DungeonChunk;
-import me.desertfox.dgen.room.RoomSchematic;
+import me.desertfox.dgen.chunk.DungeonShard;
 import org.bukkit.Location;
 
 import java.util.Random;
 
 public class SimpleGenerator extends ChunkGenerator {
 
-    public SimpleGenerator(DungeonChunk chunk) {
+    public SimpleGenerator(DungeonShard chunk) {
         super(chunk);
         roomPool.clear();
         roomPool.add("corridor_WESN");
