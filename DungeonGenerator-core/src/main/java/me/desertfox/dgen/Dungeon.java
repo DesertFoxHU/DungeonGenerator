@@ -4,13 +4,23 @@ import lombok.Getter;
 import me.desertfox.dgen.chunk.ChunkGenerator;
 import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.dgen.chunk.gens.VoidGenerator;
+import me.desertfox.dgen.room.AbstractRoom;
+import me.desertfox.dgen.room.ActiveRoom;
+import me.desertfox.dgen.room.RoomSchematic;
+import me.desertfox.dgen.schematic.OperationalSchematic;
+import me.desertfox.dgen.schematic.framework.SchematicController;
+import me.desertfox.dgen.utils.Cuboid;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class Dungeon {
 
@@ -48,12 +58,12 @@ public class Dungeon {
          * @param val
          * @return
          */
-        public Dungeon.Builder chunkSizeX(int val){
+        public Dungeon.Builder shardSizeX(int val){
             this.SHARD_SIZE_X = val;
             return this;
         }
 
-        public Dungeon.Builder chunkSizeZ(int val){
+        public Dungeon.Builder shardSizeZ(int val){
             this.SHARD_SIZE_Z = val;
             return this;
         }
@@ -90,7 +100,7 @@ public class Dungeon {
     private int SHARD_SIZE_X = 32;
     private int SHARD_SIZE_Z = 32;
 
-    private final Queue<DungeonShard> chunkQueue = new LinkedList<>();
+    private final Queue<Consumer<Dungeon>> updates = new LinkedList<>();
 
     protected Dungeon(JavaPlugin plugin, String id, Location start, Location end, int SHARD_SIZE_X, int SHARD_SIZE_Z, int MIN_ROOM_SIZE_XZ) {
         this.plugin = plugin;
@@ -109,22 +119,38 @@ public class Dungeon {
         setupCells();
         dungeons.add(this);
 
+        final Dungeon dg = this;
         new BukkitRunnable() {
             final int chunksPerTick = MAX_SHARD_BATCH;
             @Override
             public void run() {
-                if (chunkQueue.isEmpty()) {
+                if (updates.isEmpty()) {
                     return;
                 }
 
                 for (int i = 0; i < chunksPerTick; i++) {
-                    DungeonShard chunk = chunkQueue.poll();
-                    if (chunk != null) {
-                        chunk.populate();
-                    }
+                    Consumer<Dungeon> func = updates.poll();
+                    if(func != null) func.accept(dg);
                 }
             }
-        }.runTaskTimer(plugin, 10L, 10L);
+        }.runTaskTimer(plugin, 0, 2L);
+    }
+
+    public Location getCenter(){
+        return new Location(start.getWorld(),
+                (double) (start.getBlockX() + end.getBlockX()) / 2,
+                (double) (start.getBlockY() + end.getBlockY()) / 2,
+                (double) (start.getBlockZ() + end.getBlockZ()) / 2);
+    }
+
+    /**
+     * @return 2D center (X, Z) of the dungeon, the Y is same as the starting location's
+     */
+    public Location get2DCenter(){
+        return new Location(start.getWorld(),
+                (double) (start.getBlockX() + end.getBlockX()) / 2,
+                start.getBlockY(),
+                (double) (start.getBlockZ() + end.getBlockZ()) / 2);
     }
 
     private void setupCells(){
@@ -141,15 +167,83 @@ public class Dungeon {
         }
     }
 
+    /**
+     * Adds a function to the queue list
+     * @param func
+     */
+    public void updateOnQueue(Consumer<Dungeon> func){
+        updates.add(func);
+    }
+
+    /**
+     * Tries to build a room on a given location if: <br>
+     * - The room wouldn't hit another room<br>
+     * - The start location is on the grid<br>
+     *
+     * @param schematicName The schematic to build at the start location
+     * @param start The location to build it
+     * @return Null if the build wasn't concluded or the room which has been created
+     */
+    public AbstractRoom safeBuild(String schematicName, Location start){
+        DungeonShard shard = getShardOnGrid(start);
+        if(shard == null) {
+            return null;
+        }
+
+        RoomSchematic firstRoom = RoomSchematic.findByName(schematicName);
+        OperationalSchematic schematic = SchematicController.get(firstRoom.getSchematicName());
+        Cuboid cuboid = schematic.getCuboid(start, new org.bukkit.util.Vector(0,0,0));
+        if(shard.doHitOtherRoom(cuboid)){
+            return null;
+        }
+        if(shard.getRoomOnGrid(start) != null){
+            return null;
+        }
+        /*if(!shard.getRegion().contains(start)){
+            Bukkit.getLogger().info("Out of bounds!");
+            return null;
+        }*/
+        schematic.populate(start, new Vector(0,0,0));
+        AbstractRoom room = new ActiveRoom(shard, schematicName, start, cuboid, Arrays.asList(firstRoom.getDoors()));
+        return room;
+    }
+
+    /**
+     * Returns the Shard on a given (non-relative) location
+     * @param location The location to check
+     * @return Shard if possible otherwise null
+     */
+    public DungeonShard getShardOnGrid(Location location){
+        int relativeX = location.getBlockX() - start.getBlockX();
+        int relativeZ = location.getBlockZ() - start.getBlockZ();
+
+        int i = relativeX / SHARD_SIZE_X;
+        int j = relativeZ / SHARD_SIZE_Z;
+
+        if (i >= 0 && i < cells.length && j >= 0 && j < cells[i].length) {
+            return cells[i][j];
+        }
+
+        return null;
+    }
+
+    public Location snapToGrid(Location location){
+        int x = (int) (Math.floor(((double) (location.getBlockX() + MIN_ROOM_SIZE_XZ - 1) / MIN_ROOM_SIZE_XZ)) * MIN_ROOM_SIZE_XZ);
+        int z = (int) (Math.floor(((double) (location.getBlockZ() + MIN_ROOM_SIZE_XZ - 1) / MIN_ROOM_SIZE_XZ)) * MIN_ROOM_SIZE_XZ);
+        return location.clone().set(x, location.getY(), z);
+    }
+
     public World getWorld() { return start.getWorld(); }
 
     public void generateAll(boolean debug, Class<? extends ChunkGenerator> generator){
-        for (DungeonShard[] cell : cells) {
-            for(DungeonShard chunk : cell){
-                chunk.setDebug(debug);
-                chunk.setGenerator(generator);
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                DungeonShard cell = cells[i][j];
+                if(debug) Bukkit.getLogger().info("Processing chunk: " + i + "," + j + " " + cell.getStart());
+                cell.setDebug(debug);
+                cell.setGenerator(generator);
+                cell.populate();
             }
-            chunkQueue.addAll(Arrays.asList(cell));
         }
     }
 }

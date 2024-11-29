@@ -4,6 +4,7 @@ import lombok.Getter;
 import me.desertfox.dgen.Direction4;
 import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.dgen.utils.Cuboid;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.util.List;
@@ -26,8 +27,8 @@ public abstract class AbstractRoom {
         this.region = region;
         this.doors = doors;
 
-        int relativeX = location.getBlockX() - chunk.getDungeon().getStart().getBlockX();
-        int relativeZ = location.getBlockZ() - chunk.getDungeon().getStart().getBlockZ();
+        int relativeX = location.getBlockX() - chunk.getStart().getBlockX();
+        int relativeZ = location.getBlockZ() - chunk.getStart().getBlockZ();
 
         int col = relativeX / chunk.getDungeon().MIN_ROOM_SIZE_XZ;
         int row = relativeZ / chunk.getDungeon().MIN_ROOM_SIZE_XZ;

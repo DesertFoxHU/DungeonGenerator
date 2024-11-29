@@ -5,6 +5,7 @@ import me.desertfox.dgen.commands.SchematicCommand;
 import me.desertfox.dgen.commands.tab.GenerateCommandTab;
 import me.desertfox.dgen.room.RoomSchematic;
 import me.desertfox.dgen.schematic.framework.SchematicController;
+import me.desertfox.dgen.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.PluginManager;
@@ -22,16 +23,26 @@ public class DungeonGenerator extends JavaPlugin {
         RoomSchematic.IOLoadAll(this, "schemas");
         Bukkit.getLogger().info("Loaded " + RoomSchematic.getRooms().size() + " rooms!");
 
+        //test1();
         Dungeon dungeon = new Dungeon.Builder(this, "test",
-                new Location(Bukkit.getWorld("world"), 0, 65, 0),
-                200, 200, 200).setMinRoomSizeXZ(4).build();
-        Bukkit.getLogger().info("Loaded " + dungeon.getId() + " dungeon!");
+                new Location(Bukkit.getWorld("world"), 0, 65, 0), 64*5, 200, 64*5)
+                .setMinRoomSizeXZ(4)
+                .shardSizeX(64)
+                .shardSizeZ(64)
+                .build();
 
         getCommand("generate").setExecutor(new GenerateCommand());
         getCommand("generate").setTabCompleter(new GenerateCommandTab());
         getCommand("schema").setExecutor(new SchematicCommand());
 
         PluginManager pm = Bukkit.getPluginManager();
+    }
+
+    public void test1(){
+        Dungeon dungeon = new Dungeon.Builder(this, "test",
+                new Location(Bukkit.getWorld("world"), 0, 65, 0),
+                200, 200, 200).setMinRoomSizeXZ(4).build();
+        Bukkit.getLogger().info("Loaded " + dungeon.getId() + " dungeon!");
     }
 
     public void onDisable() {

@@ -71,6 +71,23 @@ public class DungeonShard {
         }
     }
 
+    public Location getCenter(){
+        return new Location(dungeon.getWorld(),
+                (double) (coordX + endX) / 2,
+                (double) (coordY + endY) / 2,
+                (double) (coordZ + endZ) / 2);
+    }
+
+    /**
+     * @return 2D center (X, Z) of the shard, the Y is same as the starting location's
+     */
+    public Location get2DCenter(){
+        return new Location(dungeon.getWorld(),
+                (double) (coordX + endX) / 2,
+                coordY,
+                (double) (coordZ + endZ) / 2);
+    }
+
     /**
      * Returns the room present on a grid or null if not
      * @param location Physical (non-relative) location
@@ -230,7 +247,6 @@ public class DungeonShard {
             drawDebug2DBox();
         }
 
-        if(indexX != 0 || indexY != 0) return;
         generator.begin(getStart());
     }
 

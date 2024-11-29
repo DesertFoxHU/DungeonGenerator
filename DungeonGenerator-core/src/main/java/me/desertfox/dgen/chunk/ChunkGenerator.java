@@ -2,6 +2,7 @@ package me.desertfox.dgen.chunk;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.desertfox.dgen.Dungeon;
 import me.desertfox.dgen.chunk.gens.*;
 import me.desertfox.dgen.room.AbstractRoom;
 import me.desertfox.dgen.room.ActiveRoom;
@@ -36,6 +37,7 @@ public abstract class ChunkGenerator {
         register(WeightedSimpleGenerator.class);
         register(ConnectedDoorsGenerator.class);
         register(MazeGenerator.class);
+        register(GameGenerator.class);
     }
 
     /**
@@ -70,28 +72,8 @@ public abstract class ChunkGenerator {
         roomPool = new ArrayList<>(RoomSchematic.getRooms().stream().map(RoomSchematic::getSchematicName).toList());
     }
 
-    /**
-     * Tries to build a room on a given location if: <br>
-     * - The room wouldn't hit another room<br>
-     * - The start location is on the grid<br>
-     *
-     * @param schematicName The schematic to build at the start location
-     * @param start The location to build it
-     * @return Null if the build wasn't concluded or the room which has been created
-     */
-    public AbstractRoom safeBuild(String schematicName, Location start){
-        RoomSchematic firstRoom = RoomSchematic.findByName(schematicName);
-        OperationalSchematic schematic = SchematicController.get(firstRoom.getSchematicName());
-        Cuboid cuboid = schematic.getCuboid(start, new Vector(0,0,0));
-        if(getShard().doHitOtherRoom(cuboid)){
-            return null;
-        }
-        if(!getShard().getRegion().contains(start)){
-            return null;
-        }
-        schematic.populate(start, new Vector(0,0,0));
-        AbstractRoom room = new ActiveRoom(shard, schematicName, start, cuboid, Arrays.asList(firstRoom.getDoors()));
-        return room;
+    public Dungeon getDungeon(){
+        return shard.getDungeon();
     }
 
     /**
