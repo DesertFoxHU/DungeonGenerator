@@ -80,6 +80,36 @@ public class RoomSchematic {
         return results;
     }
 
+    public static List<RoomSchematic> findByDoors(List<String> pool, int doorCount){
+        List<RoomSchematic> results = new ArrayList<>();
+        for(String name : pool){
+            RoomSchematic room = RoomSchematic.findByName(name);
+            if(room == null) continue;
+            if(room.doors.length != doorCount) continue;
+            results.add(room);
+        }
+        return results;
+    }
+
+    public static List<RoomSchematic> findByDoors(List<String> pool, int doorCount, Direction4... haveExactDoors){
+        List<RoomSchematic> results = new ArrayList<>();
+        for(String name : pool){
+            RoomSchematic room = RoomSchematic.findByName(name);
+            if(room == null) continue;
+            if(room.doors.length != doorCount) continue;
+            boolean match = true;
+            for(Direction4 dir4 : haveExactDoors){
+                if(!room.containsDir4(dir4)){
+                    match = false;
+                    break;
+                }
+            }
+
+            if(match) results.add(room);
+        }
+        return results;
+    }
+
     @Getter private String schematicName;
     @Getter private CustomYml yml;
     @Getter Direction4[] doors;

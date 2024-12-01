@@ -38,6 +38,7 @@ public abstract class ChunkGenerator {
         register(ConnectedDoorsGenerator.class);
         register(MazeGenerator.class);
         register(GameGenerator.class);
+        register(IsaacLikeGenerator.class);
     }
 
     /**

@@ -153,6 +153,34 @@ public class Dungeon {
                 (double) (start.getBlockZ() + end.getBlockZ()) / 2);
     }
 
+    /**
+     * Clears the blocks in the dungeon on update queue<br>
+     * It also includes the debug blocks
+     */
+    public void clearQueue(){
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                DungeonShard cell = cells[i][j];
+                updateOnQueue(d -> {
+                    cell.clear();
+                });
+            }
+        }
+    }
+
+    /**
+     * Clears the blocks in the dungeon instantly<br>
+     * It also includes the debug blocks
+     */
+    public void clear(){
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                DungeonShard cell = cells[i][j];
+                cell.clear();
+            }
+        }
+    }
+
     private void setupCells(){
         Location curr = start.clone().add(0, 0, 0);
         for (int i = 0; i < cells.length; i++) {
@@ -199,13 +227,25 @@ public class Dungeon {
         if(shard.getRoomOnGrid(start) != null){
             return null;
         }
-        /*if(!shard.getRegion().contains(start)){
-            Bukkit.getLogger().info("Out of bounds!");
+        if(!shard.getRegion().contains(start)){
             return null;
-        }*/
+        }
         schematic.populate(start, new Vector(0,0,0));
         AbstractRoom room = new ActiveRoom(shard, schematicName, start, cuboid, Arrays.asList(firstRoom.getDoors()));
         return room;
+    }
+
+    /**
+     * Tries to build a room on a given location if: <br>
+     * - The room wouldn't hit another room<br>
+     * - The start location is on the grid<br>
+     *
+     * @param schematic The schematic to build at the start location
+     * @param start The location to build it
+     * @return Null if the build wasn't concluded or the room which has been created
+     */
+    public AbstractRoom safeBuild(RoomSchematic schematic, Location start){
+        return safeBuild(schematic.getSchematicName(), start);
     }
 
     /**
@@ -214,11 +254,11 @@ public class Dungeon {
      * @return Shard if possible otherwise null
      */
     public DungeonShard getShardOnGrid(Location location){
-        int relativeX = location.getBlockX() - start.getBlockX();
-        int relativeZ = location.getBlockZ() - start.getBlockZ();
+        int relativeX = location.getBlockX() - start.getBlockX(); //88
+        int relativeZ = location.getBlockZ() - start.getBlockZ(); //20
 
-        int i = relativeX / SHARD_SIZE_X;
-        int j = relativeZ / SHARD_SIZE_Z;
+        int i = relativeZ / SHARD_SIZE_Z;
+        int j = relativeX / SHARD_SIZE_X;
 
         if (i >= 0 && i < cells.length && j >= 0 && j < cells[i].length) {
             return cells[i][j];
@@ -239,7 +279,6 @@ public class Dungeon {
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
                 DungeonShard cell = cells[i][j];
-                if(debug) Bukkit.getLogger().info("Processing chunk: " + i + "," + j + " " + cell.getStart());
                 cell.setDebug(debug);
                 cell.setGenerator(generator);
                 cell.populate();

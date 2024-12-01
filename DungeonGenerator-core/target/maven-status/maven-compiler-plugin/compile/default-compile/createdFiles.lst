@@ -11,12 +11,15 @@ me\desertfox\dgen\utils\Cuboid$CuboidIterator.class
 me\desertfox\dgen\chunk\gens\MazeGenerator$1.class
 me\desertfox\dgen\room\RoomSchematic.class
 me\desertfox\dgen\utils\CustomYml.class
+me\desertfox\dgen\chunk\gens\IsaacLikeGenerator.class
 me\desertfox\dgen\schematic\framework\Rotation$Direction.class
 me\desertfox\dgen\Dungeon$1.class
 me\desertfox\dgen\chunk\gens\GameGenerator.class
 me\desertfox\dgen\chunk\ChunkGenerator.class
+me\desertfox\dgen\commands\DungeonCommand.class
 me\desertfox\dgen\utils\Utils.class
 me\desertfox\dgen\Dungeon$Builder.class
+me\desertfox\dgen\chunk\gens\IsaacLikeGenerator$1.class
 me\desertfox\dgen\room\ActiveRoom.class
 me\desertfox\dgen\chunk\gens\MazeGenerator.class
 me\desertfox\dgen\room\AbstractRoom.class

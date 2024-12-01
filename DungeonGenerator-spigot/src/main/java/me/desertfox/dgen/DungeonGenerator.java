@@ -1,5 +1,7 @@
 package me.desertfox.dgen;
 
+import me.desertfox.dgen.chunk.gens.IsaacLikeGenerator;
+import me.desertfox.dgen.commands.DungeonCommand;
 import me.desertfox.dgen.commands.GenerateCommand;
 import me.desertfox.dgen.commands.SchematicCommand;
 import me.desertfox.dgen.commands.tab.GenerateCommandTab;
@@ -23,13 +25,10 @@ public class DungeonGenerator extends JavaPlugin {
         RoomSchematic.IOLoadAll(this, "schemas");
         Bukkit.getLogger().info("Loaded " + RoomSchematic.getRooms().size() + " rooms!");
 
+        DungeonCommand.register(this);
         //test1();
-        Dungeon dungeon = new Dungeon.Builder(this, "test",
-                new Location(Bukkit.getWorld("world"), 0, 65, 0), 64*5, 200, 64*5)
-                .setMinRoomSizeXZ(4)
-                .shardSizeX(64)
-                .shardSizeZ(64)
-                .build();
+        //test2();
+        Dungeon dungeon = IsaacLikeGenerator.build(this, "test", new Location(Bukkit.getWorld("world"), 0, 65, 0));
 
         getCommand("generate").setExecutor(new GenerateCommand());
         getCommand("generate").setTabCompleter(new GenerateCommandTab());
@@ -43,6 +42,15 @@ public class DungeonGenerator extends JavaPlugin {
                 new Location(Bukkit.getWorld("world"), 0, 65, 0),
                 200, 200, 200).setMinRoomSizeXZ(4).build();
         Bukkit.getLogger().info("Loaded " + dungeon.getId() + " dungeon!");
+    }
+
+    public void test2(){
+        Dungeon dungeon = new Dungeon.Builder(this, "test",
+                new Location(Bukkit.getWorld("world"), 0, 65, 0), 64*5, 200, 64*5)
+                .setMinRoomSizeXZ(4)
+                .shardSizeX(64)
+                .shardSizeZ(64)
+                .build();
     }
 
     public void onDisable() {

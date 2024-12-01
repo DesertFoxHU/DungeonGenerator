@@ -94,8 +94,8 @@ public class DungeonShard {
      * @return The AbstractRoom on the grid position
      */
     public @Nullable AbstractRoom getRoomOnGrid(Location location){
-        int relativeX = location.getBlockX() - dungeon.getStart().getBlockX();
-        int relativeZ = location.getBlockZ() - dungeon.getStart().getBlockZ();
+        int relativeX = location.getBlockX() - getStart().getBlockX();
+        int relativeZ = location.getBlockZ() - getStart().getBlockZ();
 
         int col = relativeX / getDungeon().MIN_ROOM_SIZE_XZ;
         int row = relativeZ / getDungeon().MIN_ROOM_SIZE_XZ;
@@ -113,13 +113,36 @@ public class DungeonShard {
      * @return True if it's on the grid
      */
     public boolean isOnGrid(Location location){
-        int relativeX = location.getBlockX() - dungeon.getStart().getBlockX();
-        int relativeZ = location.getBlockZ() - dungeon.getStart().getBlockZ();
+        int relativeX = location.getBlockX() - getStart().getBlockX();
+        int relativeZ = location.getBlockZ() - getStart().getBlockZ();
 
         int col = relativeX / getDungeon().MIN_ROOM_SIZE_XZ;
         int row = relativeZ / getDungeon().MIN_ROOM_SIZE_XZ;
 
         return row >= 0 && row < roomGrid.length && col >= 0 && col < roomGrid[0].length; // Out of bounds
+    }
+
+    /**
+     * Returns a grid actual region (cuboid)
+     * @param row The row number of grid
+     * @param column The column number of grid
+     * @return The region of the given grid or null
+     */
+    public Cuboid getGridCuboid(int row, int column) {
+        if (row < 0 || row >= roomGrid.length || column < 0 || column >= roomGrid[0].length) {
+            return null;
+        }
+
+        int startX = getStart().getBlockX() + column * getDungeon().MIN_ROOM_SIZE_XZ;
+        int startZ = getStart().getBlockZ() + row * getDungeon().MIN_ROOM_SIZE_XZ;
+
+        int endX = startX + getDungeon().MIN_ROOM_SIZE_XZ - 1;
+        int endZ = startZ + getDungeon().MIN_ROOM_SIZE_XZ - 1;
+
+        int startY = getStart().getBlockY();
+        int endY = startY + getEnd().getBlockY() - 1;
+
+        return new Cuboid(new Location(dungeon.getWorld(), startX, startY, startZ), new Location(dungeon.getWorld(), endX, endY, endZ));
     }
 
     /**
@@ -135,8 +158,44 @@ public class DungeonShard {
             return neighbors;
         }
 
-        int relativeX = location.getBlockX() - dungeon.getStart().getBlockX();
-        int relativeZ = location.getBlockZ() - dungeon.getStart().getBlockZ();
+        int relativeX = location.getBlockX() - getStart().getBlockX();
+        int relativeZ = location.getBlockZ() - getStart().getBlockZ();
+        int col = relativeX / dungeon.MIN_ROOM_SIZE_XZ;
+        int row = relativeZ / dungeon.MIN_ROOM_SIZE_XZ;
+
+        int[][] directions = {
+                {-1, 0}, // North
+                {1, 0},  // South
+                {0, -1}, // West
+                {0, 1}   // East
+        };
+
+        for (int[] dir : directions) {
+            int neighborRow = row + dir[0];
+            int neighborCol = col + dir[1];
+
+            if (neighborRow >= 0 && neighborRow < roomGrid.length &&
+                    neighborCol >= 0 && neighborCol < roomGrid[0].length) {
+
+                AbstractRoom neighbor = roomGrid[neighborRow][neighborCol];
+                if (neighbor != null) {
+                    neighbors.add(neighbor);
+                }
+            }
+        }
+
+        return neighbors;
+    }
+
+    /**
+     * @param location
+     * @return A list of a room's neighbors or an empty list
+     */
+    public List<AbstractRoom> getNeighbors(Location location) {
+        List<AbstractRoom> neighbors = new ArrayList<>();
+
+        int relativeX = location.getBlockX() - getStart().getBlockX();
+        int relativeZ = location.getBlockZ() - getStart().getBlockZ();
         int col = relativeX / dungeon.MIN_ROOM_SIZE_XZ;
         int row = relativeZ / dungeon.MIN_ROOM_SIZE_XZ;
 
@@ -174,8 +233,8 @@ public class DungeonShard {
             return null;
         }
 
-        int relativeX = location.getBlockX() - dungeon.getStart().getBlockX();
-        int relativeZ = location.getBlockZ() - dungeon.getStart().getBlockZ();
+        int relativeX = location.getBlockX() - getStart().getBlockX();
+        int relativeZ = location.getBlockZ() - getStart().getBlockZ();
         int col = relativeX / dungeon.MIN_ROOM_SIZE_XZ;
         int row = relativeZ / dungeon.MIN_ROOM_SIZE_XZ;
 
@@ -242,12 +301,20 @@ public class DungeonShard {
      * The code first clears the area then starts the generation process
      */
     public void populate(){
-        new Cuboid(getStart(), getEnd()).clearRegion();
+        region.clearRegion();
         if(debug){
             drawDebug2DBox();
         }
 
         generator.begin(getStart());
+    }
+
+    /**
+     * Clears this shard cell blocks<br>
+     * It also includes the debug blocks
+     */
+    public void clear(){
+        region.expand(Cuboid.CuboidDirection.Down, 1).clearRegion();
     }
 
     /**
