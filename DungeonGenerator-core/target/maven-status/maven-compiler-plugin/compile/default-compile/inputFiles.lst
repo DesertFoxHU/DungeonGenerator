@@ -1,7 +1,10 @@
 C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java\me\desertfox\dgen\commands\DungeonCommand.java
 C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java\me\desertfox\dgen\chunk\DungeonShard.java
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java\me\desertfox\dgen\commands\DungeonCommandTab.java
 C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java\me\desertfox\dgen\chunk\gens\VoidGenerator.java
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java\me\desertfox\dgen\room\Room.java
 C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java\me\desertfox\dgen\schematic\framework\SchematicController.java
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java\me\desertfox\dgen\chunk\gens\BetterIsaacGenerator.java
 C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java\me\desertfox\dgen\utils\CustomYml.java
 C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java\me\desertfox\dgen\room\RoomSchematic.java
 C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java\me\desertfox\dgen\chunk\gens\SimpleGenerator.java
@@ -18,4 +21,3 @@ C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\m
 C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java\me\desertfox\dgen\chunk\gens\ConnectedDoorsGenerator.java
 C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java\me\desertfox\dgen\room\AbstractRoom.java
 C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java\me\desertfox\dgen\utils\Utils.java
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java\me\desertfox\dgen\room\ActiveRoom.java

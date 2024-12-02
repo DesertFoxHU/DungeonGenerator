@@ -24,7 +24,8 @@ public class MazeGenerator extends ChunkGenerator {
     public List<Location> array = new ArrayList<>();
     @Override
     public void begin(Location start) {
-        AbstractRoom room = getShard().getDungeon().safeBuild("corridor_SE", start);
+        AbstractRoom room = getShard().getDungeon().safeClaim("corridor_SE", start);
+        room.placeDown();
         array.add(start.clone().add(Direction4.EAST.vector.getX() * (room.getRegion().getSizeX()+1), 0, Direction4.EAST.vector.getZ() * room.getRegion().getSizeZ()));
         array.add(start.clone().add(Direction4.SOUTH.vector.getX() * (room.getRegion().getSizeX()+1), 0, Direction4.SOUTH.vector.getZ() * room.getRegion().getSizeZ()));
         new BukkitRunnable(){
@@ -74,10 +75,10 @@ public class MazeGenerator extends ChunkGenerator {
                 Bukkit.getLogger().info("" + dir);
             }
             Bukkit.getLogger().info("END");
-            getShard().getDungeon().safeBuild("wall_4x4", start);
+            getShard().getDungeon().safeClaim("wall_4x4", start).placeDown();
             return;
         }
-        AbstractRoom room = getShard().getDungeon().safeBuild(schemas.get(new Random().nextInt(schemas.size())).getSchematicName(), start);
+        AbstractRoom room = getShard().getDungeon().safeClaim(schemas.get(new Random().nextInt(schemas.size())).getSchematicName(), start).placeDown();
         if(room != null){
             for(Direction4 future : doors){
                 array.add(start.clone().add(future.vector.getX() * (room.getRegion().getSizeX()+1), 0, future.vector.getZ() * room.getRegion().getSizeZ()));

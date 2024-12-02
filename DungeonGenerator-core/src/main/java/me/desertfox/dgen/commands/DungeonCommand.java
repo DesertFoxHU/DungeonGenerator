@@ -1,6 +1,7 @@
 package me.desertfox.dgen.commands;
 
 import me.desertfox.dgen.Dungeon;
+import me.desertfox.dgen.chunk.ChunkGenerator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,6 +13,7 @@ public class DungeonCommand implements CommandExecutor {
 
     public static void register(JavaPlugin plugin){
         plugin.getCommand("dungeon").setExecutor(new DungeonCommand());
+        plugin.getCommand("dungeon").setTabCompleter(new DungeonCommandTab());
     }
 
     @Override
@@ -28,6 +30,8 @@ public class DungeonCommand implements CommandExecutor {
 
         if(args.length == 0){
             player.sendMessage("§c/dungeon [id] clear");
+            player.sendMessage("§c/dungeon [id] generate [debug] [generatorName]");
+            return false;
         }
 
         String id = args[0];
@@ -37,6 +41,18 @@ public class DungeonCommand implements CommandExecutor {
                 dungeon.clearQueue();
                 player.sendMessage("§2§lStarted clearing!");
             }
+        }
+
+        if(args.length == 4){
+            if(args[1].equalsIgnoreCase("generate")){
+                boolean debug = Boolean.parseBoolean(args[2]);
+                String generator = args[3];
+
+                Dungeon dungeon = Dungeon.findByID(id);
+                dungeon.generateAll(debug, ChunkGenerator.findByClassName(generator));
+                player.sendMessage("§2§lStarted generating!");
+            }
+            return false;
         }
         return false;
     }

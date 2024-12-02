@@ -315,6 +315,9 @@ public class DungeonShard {
      */
     public void clear(){
         region.expand(Cuboid.CuboidDirection.Down, 1).clearRegion();
+        for (AbstractRoom[] abstractRooms : roomGrid) {
+            Arrays.fill(abstractRooms, null);
+        }
     }
 
     /**

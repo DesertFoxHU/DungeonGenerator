@@ -5,22 +5,19 @@ import me.desertfox.dgen.chunk.ChunkGenerator;
 import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.dgen.chunk.gens.VoidGenerator;
 import me.desertfox.dgen.room.AbstractRoom;
-import me.desertfox.dgen.room.ActiveRoom;
+import me.desertfox.dgen.room.Room;
 import me.desertfox.dgen.room.RoomSchematic;
 import me.desertfox.dgen.schematic.OperationalSchematic;
 import me.desertfox.dgen.schematic.framework.SchematicController;
 import me.desertfox.dgen.utils.Cuboid;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class Dungeon {
 
@@ -204,22 +201,52 @@ public class Dungeon {
     }
 
     /**
-     * Tries to build a room on a given location if: <br>
+     * Check if the area is safe to build if: <br>
      * - The room wouldn't hit another room<br>
      * - The start location is on the grid<br>
      *
-     * @param schematicName The schematic to build at the start location
-     * @param start The location to build it
-     * @return Null if the build wasn't concluded or the room which has been created
+     * @param schematicName The schematic name to check
+     * @param start The location to check
+     * @return False if not safe to build otherwise true
      */
-    public AbstractRoom safeBuild(String schematicName, Location start){
+    public boolean isSafeToBuild(String schematicName, Location start){
+        DungeonShard shard = getShardOnGrid(start);
+        if(shard == null) {
+            return false;
+        }
+
+        RoomSchematic firstRoom = RoomSchematic.findByName(schematicName);
+        OperationalSchematic schematic = SchematicController.get(firstRoom.getSchematicName());
+        Cuboid cuboid = schematic.getCuboid(start, new org.bukkit.util.Vector(0,0,0));
+        if(shard.doHitOtherRoom(cuboid)){
+            return false;
+        }
+        if(shard.getRoomOnGrid(start) != null){
+            return false;
+        }
+        return shard.getRegion().contains(start);
+    }
+
+
+    /**
+     * Tries to claim a room on a given location if: <br>
+     * - The room wouldn't hit another room<br>
+     * - The start location is on the grid<br>
+     * <br>
+     * To actually see the physical room you need to call {@link AbstractRoom#placeDown()}<br>
+     *
+     * @param schematicName The schematic to claim at the start location
+     * @param start The location to claim it
+     * @return Null if the claim wasn't concluded or the room reference which has been created
+     */
+    public AbstractRoom safeClaim(String schematicName, Location start){
         DungeonShard shard = getShardOnGrid(start);
         if(shard == null) {
             return null;
         }
 
         RoomSchematic firstRoom = RoomSchematic.findByName(schematicName);
-        OperationalSchematic schematic = SchematicController.get(firstRoom.getSchematicName());
+        OperationalSchematic schematic = SchematicController.getHardReference(firstRoom.getSchematicName());
         Cuboid cuboid = schematic.getCuboid(start, new org.bukkit.util.Vector(0,0,0));
         if(shard.doHitOtherRoom(cuboid)){
             return null;
@@ -230,22 +257,23 @@ public class Dungeon {
         if(!shard.getRegion().contains(start)){
             return null;
         }
-        schematic.populate(start, new Vector(0,0,0));
-        AbstractRoom room = new ActiveRoom(shard, schematicName, start, cuboid, Arrays.asList(firstRoom.getDoors()));
+        AbstractRoom room = new Room(shard, schematicName, start, cuboid, Arrays.asList(firstRoom.getDoors()));
         return room;
     }
 
     /**
-     * Tries to build a room on a given location if: <br>
+     * Tries to claim a room on a given location if: <br>
      * - The room wouldn't hit another room<br>
      * - The start location is on the grid<br>
+     * <br>
+     * To actually see the physical room you need to call {@link AbstractRoom#placeDown()}<br>
      *
-     * @param schematic The schematic to build at the start location
-     * @param start The location to build it
-     * @return Null if the build wasn't concluded or the room which has been created
+     * @param schematic The schematic to claim at the start location
+     * @param start The location to claim it
+     * @return Null if the claim wasn't concluded or the room reference which has been created
      */
-    public AbstractRoom safeBuild(RoomSchematic schematic, Location start){
-        return safeBuild(schematic.getSchematicName(), start);
+    public AbstractRoom safeClaim(RoomSchematic schematic, Location start){
+        return safeClaim(schematic.getSchematicName(), start);
     }
 
     /**

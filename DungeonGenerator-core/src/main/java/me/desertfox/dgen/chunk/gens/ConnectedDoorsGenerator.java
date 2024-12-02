@@ -58,7 +58,8 @@ public class ConnectedDoorsGenerator extends ChunkGenerator {
     }
 
     private void call(String schematicName, Location start){
-        AbstractRoom room = getShard().getDungeon().safeBuild(schematicName, start);
+        AbstractRoom room = getShard().getDungeon().safeClaim(schematicName, start);
+        room.placeDown();
         if(room != null){
             for(Direction4 dir4 : RoomSchematic.findByName(room.getSchematicName()).getDoors()){
                 Location l = start.clone().add(dir4.vector.getX() * (room.getRegion().getSizeX()+1), 0, dir4.vector.getZ() * room.getRegion().getSizeZ());

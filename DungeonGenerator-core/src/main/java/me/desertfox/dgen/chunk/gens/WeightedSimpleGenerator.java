@@ -26,7 +26,7 @@ public class WeightedSimpleGenerator extends ChunkGenerator {
 
     @Override
     public void begin(Location start) {
-        getShard().getDungeon().safeBuild("corridor_WESN", start);
+        getShard().getDungeon().safeClaim("corridor_WESN", start).placeDown();
 
         int minX = Math.min(start.getBlockX(), getShard().getEnd().getBlockX());
         int maxX = Math.max(start.getBlockX(), getShard().getEnd().getBlockX());
@@ -40,7 +40,7 @@ public class WeightedSimpleGenerator extends ChunkGenerator {
             for (int z = minZ; z <= maxZ; z += sizeZ) {
                 if (x + sizeX - 1 <= maxX && z + sizeZ - 1 <= maxZ) {
                     Location buildingStart = new Location(getShard().getDungeon().getWorld(), x, start.getY(), z);
-                    getShard().getDungeon().safeBuild(draw(), buildingStart);
+                    getShard().getDungeon().safeClaim(draw(), buildingStart).placeDown();
                 }
             }
         }

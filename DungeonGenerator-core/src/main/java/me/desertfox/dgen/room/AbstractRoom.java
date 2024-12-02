@@ -3,10 +3,13 @@ package me.desertfox.dgen.room;
 import lombok.Getter;
 import me.desertfox.dgen.Direction4;
 import me.desertfox.dgen.chunk.DungeonShard;
+import me.desertfox.dgen.schematic.OperationalSchematic;
+import me.desertfox.dgen.schematic.framework.SchematicController;
 import me.desertfox.dgen.utils.Cuboid;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,5 +63,11 @@ public abstract class AbstractRoom {
                 }
             }
         }
+    }
+
+    public AbstractRoom placeDown(){
+        OperationalSchematic schematic = SchematicController.get(schematicName);
+        schematic.populate(location, new Vector(0,0,0));
+        return this;
     }
 }

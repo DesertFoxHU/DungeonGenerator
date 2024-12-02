@@ -4,17 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import me.desertfox.dgen.Dungeon;
 import me.desertfox.dgen.chunk.gens.*;
-import me.desertfox.dgen.room.AbstractRoom;
-import me.desertfox.dgen.room.ActiveRoom;
 import me.desertfox.dgen.room.RoomSchematic;
-import me.desertfox.dgen.schematic.OperationalSchematic;
-import me.desertfox.dgen.schematic.framework.SchematicController;
-import me.desertfox.dgen.utils.Cuboid;
 import org.bukkit.Location;
-import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,6 +32,7 @@ public abstract class ChunkGenerator {
         register(MazeGenerator.class);
         register(GameGenerator.class);
         register(IsaacLikeGenerator.class);
+        register(BetterIsaacGenerator.class);
     }
 
     /**

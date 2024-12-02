@@ -20,7 +20,8 @@ public class GameGenerator extends ChunkGenerator {
         for(int i = 0; i < numberOfRooms; i++){
             getDungeon().updateOnQueue((dg) -> {
                 Location l = getDungeon().snapToGrid(Utils.getRandomPointInCircle(getShard().get2DCenter(), 32));
-                AbstractRoom result = getDungeon().safeBuild("corridor_16x16", l);
+                AbstractRoom result = getDungeon().safeClaim("corridor_16x16", l);
+                result.placeDown();
             });
         }
     }

@@ -45,6 +45,19 @@ public class SchematicController {
     }
   }
 
+  /**
+   * Try to avoid using this as much as you can<br>
+   * The returned value is a reference to the original schematic<br>
+   * Any modification could lead to unexpected errors, and trust me<br>
+   * it will be hard to track it down<br>
+   * @param name
+   * @return Reference to the original schematic
+   */
+  public static OperationalSchematic getHardReference(String name){
+    if(!schematics.containsKey(name)) return null;
+    return schematics.get(name);
+  }
+
   public static OperationalSchematic get(String name){
     if(!schematics.containsKey(name)) return null;
     return schematics.get(name).clone();

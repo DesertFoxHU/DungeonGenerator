@@ -14,7 +14,7 @@ import org.joml.Random;
 
 import java.util.*;
 
-public class IsaacLikeGenerator extends ChunkGenerator {
+public class BetterIsaacGenerator extends ChunkGenerator {
 
     public static Dungeon build(JavaPlugin plugin, String id, Location location){
         return new Dungeon.Builder(plugin, id, location, 64*4, 200, 64*4)
@@ -33,7 +33,7 @@ public class IsaacLikeGenerator extends ChunkGenerator {
 
     HashMap<RoomSchematic, Integer> ROOMS = new HashMap<>();
     long seed = Random.newSeed();
-    public IsaacLikeGenerator(DungeonShard chunk) {
+    public BetterIsaacGenerator(DungeonShard chunk) {
         super(chunk);
         roomPool.clear();
         for(RoomSchematic schema : RoomSchematic.getRooms()){

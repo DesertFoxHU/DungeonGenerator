@@ -1,5 +1,6 @@
 package me.desertfox.dgen;
 
+import me.desertfox.dgen.chunk.gens.BetterIsaacGenerator;
 import me.desertfox.dgen.chunk.gens.IsaacLikeGenerator;
 import me.desertfox.dgen.commands.DungeonCommand;
 import me.desertfox.dgen.commands.GenerateCommand;
@@ -28,7 +29,7 @@ public class DungeonGenerator extends JavaPlugin {
         DungeonCommand.register(this);
         //test1();
         //test2();
-        Dungeon dungeon = IsaacLikeGenerator.build(this, "test", new Location(Bukkit.getWorld("world"), 0, 65, 0));
+        Dungeon dungeon = BetterIsaacGenerator.build(this, "test", new Location(Bukkit.getWorld("world"), 0, 65, 0));
 
         getCommand("generate").setExecutor(new GenerateCommand());
         getCommand("generate").setTabCompleter(new GenerateCommandTab());
