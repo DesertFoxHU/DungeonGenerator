@@ -52,11 +52,31 @@ To generate all of your dungeon:
 }
 ```
 
-### How it works?
+You can find more examples and an initial starting point in **DungeonGenerator-spigot** module.
+
+## How to setup a schematic?
+Initially the library can't create or delete schematics, but there is an already written controller in **DungeonGenerator-spigot** "SchematicCommand"<br>
+
+<br>
+You can set up doors by placing **Jigsaw** blocks pointing outwards<br>
+![kép](https://github.com/user-attachments/assets/c341fa83-990e-4498-89d6-c739b887930f)
+
+This will save the doors direction to the schematic<br>
+Schematics doesn't have physical representation of their doors only the direction (used for room's connection)<br>
+So in this case the jigsaw will tell the system "there is a possibility to connect a room there"<br>
+
+If you use the SchematicCommand class:
+- It works the same way like a WorldEdit
+- Set the first block by looking at a block and type /schema setPos1 then the second one by /schema setPos2
+- Type /schema create [Name]
+
+## How it works?
 When you make a new dungeon instance the system will generate **DungeonShards** by your configuration<br>
-every Shard is like a chunk in minecraft, it helps manage bigger dungeons in the cost of higher memory usage.<br>
+every Shard is like a chunk in minecraft, it helps manage bigger dungeons for the cost of higher memory usage.<br>
 <br>
 By default a shard is 32x32 block (but you can configure this in the Dungeon.Builder class), shards stored grid-like in the Dungeon.class<br>
 and the Shard stores the rooms also in grid-like solution<br>
 <br>
 The shards' room grid will have (SHARD_SIZE_XZ / ROOM_MIN_SIZE_XZ) count, the rooms' smallest size is 4x4 by default (it can be overwritten)
+<br>
+
