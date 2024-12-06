@@ -59,7 +59,7 @@ Initially the library can't create or delete schematics, but there is an already
 
 <br>
 You can set up doors by placing **Jigsaw** blocks pointing outwards<br>
-![Képernyőkép 2024-12-06 235323](https://github.com/user-attachments/assets/c2f2b439-fd43-48ad-b5af-f2473b29281b)
+![image](https://github.com/user-attachments/assets/c2f2b439-fd43-48ad-b5af-f2473b29281b)
 
 This will save the doors direction to the schematic<br>
 Schematics doesn't have physical representation of their doors only the direction (used for room's connection)<br>
