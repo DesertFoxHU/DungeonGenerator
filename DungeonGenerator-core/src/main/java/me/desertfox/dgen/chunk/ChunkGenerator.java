@@ -31,8 +31,8 @@ public abstract class ChunkGenerator {
         register(ConnectedDoorsGenerator.class);
         register(MazeGenerator.class);
         register(GameGenerator.class);
-        register(IsaacLikeGenerator.class);
         register(BetterIsaacGenerator.class);
+        register(IsaacLikeGenerator.class);
     }
 
     /**
@@ -60,11 +60,11 @@ public abstract class ChunkGenerator {
      * It is not mandatory to use this system, it can be easily avoided and the system doesn't force<br>
      * you to use this<br>
      */
-    @Setter protected List<String> roomPool;
+    @Setter protected List<RoomSchematic> roomPool;
 
     public ChunkGenerator(DungeonShard shard){
         this.shard = shard;
-        roomPool = new ArrayList<>(RoomSchematic.getRooms().stream().map(RoomSchematic::getSchematicName).toList());
+        roomPool = new ArrayList<>(RoomSchematic.getRooms());
     }
 
     public Dungeon getDungeon(){

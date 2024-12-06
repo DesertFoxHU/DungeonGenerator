@@ -20,11 +20,11 @@ public class ConnectedDoorsGenerator extends ChunkGenerator {
     public ConnectedDoorsGenerator(DungeonShard chunk) {
         super(chunk);
         roomPool.clear();
-        roomPool.add("corridor_WESN");
-        roomPool.add("corridor_SN");
-        roomPool.add("corridor_WE");
-        roomPool.add("wall_4x4");
-        roomPool.add("garage_W");
+        roomPool.add(RoomSchematic.findByName("corridor_WESN"));
+        roomPool.add(RoomSchematic.findByName("corridor_SN"));
+        roomPool.add(RoomSchematic.findByName("corridor_WE"));
+        roomPool.add(RoomSchematic.findByName("wall_4x4"));
+        roomPool.add(RoomSchematic.findByName("garage_W"));
     }
 
     public List<Tuple<Direction4, Location>> array = new ArrayList<>();
@@ -61,7 +61,7 @@ public class ConnectedDoorsGenerator extends ChunkGenerator {
         AbstractRoom room = getShard().getDungeon().safeClaim(schematicName, start);
         room.placeDown();
         if(room != null){
-            for(Direction4 dir4 : RoomSchematic.findByName(room.getSchematicName()).getDoors()){
+            for(Direction4 dir4 : RoomSchematic.findByName(room.getSchematicName()).getAllDoors()){
                 Location l = start.clone().add(dir4.vector.getX() * (room.getRegion().getSizeX()+1), 0, dir4.vector.getZ() * room.getRegion().getSizeZ());
                 Bukkit.getLogger().info("Adding to array {" + dir4 + ": " + l.getBlockX() + ";" + l.getBlockY() + ";" + l.getBlockZ() + "}");
                 array.add(new Tuple<>(dir4, l));

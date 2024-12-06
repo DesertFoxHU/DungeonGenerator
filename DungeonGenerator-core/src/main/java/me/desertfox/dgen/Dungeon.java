@@ -257,7 +257,7 @@ public class Dungeon {
         if(!shard.getRegion().contains(start)){
             return null;
         }
-        AbstractRoom room = new Room(shard, schematicName, start, cuboid, Arrays.asList(firstRoom.getDoors()));
+        AbstractRoom room = new Room(shard, schematicName, start, cuboid, firstRoom.getAllDoors());
         return room;
     }
 

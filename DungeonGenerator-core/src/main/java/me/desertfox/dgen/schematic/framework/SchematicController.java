@@ -1,5 +1,6 @@
 package me.desertfox.dgen.schematic.framework;
 
+import me.desertfox.dgen.Direction4;
 import me.desertfox.dgen.schematic.OperationalSchematic;
 import me.desertfox.dgen.utils.Cuboid;
 import me.desertfox.dgen.utils.CustomYml;
@@ -9,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Structure;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Jigsaw;
 import org.bukkit.block.structure.UsageMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -70,7 +72,7 @@ public class SchematicController {
     return new CustomYml(plugin).createNew(schemaDir + File.separator + fileName, false);
   }
 
-  private static Vector getRelativeCorner(CustomYml yml, String configTag) {
+  public static Vector getRelativeCorner(CustomYml yml, String configTag) {
     String raw = yml.getConfig().getString("schematic.relative_corner." + configTag);
     if(raw == null){
       Bukkit.getLogger().info("Couldn't load relative corner here: " + yml.file.getAbsolutePath() + " (" + configTag + ")");
@@ -99,6 +101,8 @@ public class SchematicController {
     List<String> relativeBlockList = new ArrayList<>();
     saveRelativeCorner(yml, center, c.getLocation1(), "pos1");
     saveRelativeCorner(yml, center, c.getLocation2(), "pos2");
+
+    List<String> doors = new ArrayList<>();
     for (Block block : c.getBlocks()) {
       Location currentLocation = block.getLocation();
       if (block.getType() == Material.AIR || block.getType() == exclude) continue;
@@ -106,8 +110,13 @@ public class SchematicController {
       int relativeY = center.getBlockY() - currentLocation.getBlockY();
       int relativeZ = center.getBlockZ() - currentLocation.getBlockZ();
       String blockData = currentLocation.getBlock().getBlockData().getAsString();
-      relativeBlockList.add(relativeX + " " + relativeX + " " + relativeY + " " + relativeZ + " " + blockData);
+
+      if(block.getBlockData() instanceof Jigsaw jigsaw){
+        doors.add(relativeX + " " + relativeY + " " + relativeZ + " " + Direction4.convertFrom(jigsaw.getOrientation()));
+      }
+      else relativeBlockList.add(relativeX + " " + relativeY + " " + relativeZ + " " + blockData);
     }
+    yml.getConfig().set("schematic.doors", doors);
     yml.getConfig().set("schematic.list", relativeBlockList);
     yml.save();
 
@@ -117,7 +126,7 @@ public class SchematicController {
     Structure struct = (Structure) structure.getBlock().getState();
     struct.setBoundingBoxVisible(true);
     struct.setUsageMode(UsageMode.SAVE);
-    struct.setStructureName(yml.getConfig().getName());
+    struct.setStructureName(yml.file.getName());
     struct.setRelativePosition(new BlockVector(1, 1, 1));
     struct.setStructureSize(new BlockVector(c.getSizeX()+1, c.getSizeY()+1, c.getSizeZ()));
     struct.update();
@@ -132,14 +141,14 @@ public class SchematicController {
     List<OperationalSchematic.Data> data = new ArrayList<>();
     for (String blockRaw : blockList) {
       String[] splitted = blockRaw.split(" ");
-      int X = Integer.parseInt(splitted[1]);
-      int Y = Integer.parseInt(splitted[2]);
-      int Z = Integer.parseInt(splitted[3]);
-      if(splitted[4].equals("minecraft:grass")){
-        splitted[4] = "minecraft:short_grass";
+      int X = Integer.parseInt(splitted[0]);
+      int Y = Integer.parseInt(splitted[1]);
+      int Z = Integer.parseInt(splitted[2]);
+      if(splitted[3].equals("minecraft:grass")){
+        splitted[3] = "minecraft:short_grass";
         Bukkit.getLogger().warning("Warning! Found minecraft_grass as material in " + yml.file.getName() + " it is outdated! Use short_grass or tall_grass");
       }
-      BlockData blockData = Bukkit.createBlockData(splitted[4]);
+      BlockData blockData = Bukkit.createBlockData(splitted[3]);
       data.add(new OperationalSchematic.Data(new Vector(X, Y, Z), blockData));
     }
     return new OperationalSchematic(yml.file.getName().split("\\.")[0], pos1, pos2, data);

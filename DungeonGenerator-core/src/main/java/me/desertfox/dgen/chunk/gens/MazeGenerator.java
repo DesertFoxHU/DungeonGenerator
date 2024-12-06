@@ -18,7 +18,7 @@ public class MazeGenerator extends ChunkGenerator {
 
     public MazeGenerator(DungeonShard chunk) {
         super(chunk);
-        roomPool.remove("garage_W");
+        roomPool.remove(RoomSchematic.findByName("garage_W"));
     }
 
     public List<Location> array = new ArrayList<>();

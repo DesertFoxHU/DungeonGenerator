@@ -2,6 +2,7 @@ package me.desertfox.dgen.chunk.gens;
 
 import me.desertfox.dgen.chunk.ChunkGenerator;
 import me.desertfox.dgen.chunk.DungeonShard;
+import me.desertfox.dgen.room.RoomSchematic;
 import org.bukkit.Location;
 
 import java.util.Random;
@@ -11,10 +12,10 @@ public class SimpleGenerator extends ChunkGenerator {
     public SimpleGenerator(DungeonShard chunk) {
         super(chunk);
         roomPool.clear();
-        roomPool.add("corridor_WESN");
-        roomPool.add("corridor_SN");
-        roomPool.add("corridor_WE");
-        roomPool.add("wall_4x4");
+        roomPool.add(RoomSchematic.findByName("corridor_WESN"));
+        roomPool.add(RoomSchematic.findByName("corridor_SN"));
+        roomPool.add(RoomSchematic.findByName("corridor_WE"));
+        roomPool.add(RoomSchematic.findByName("wall_4x4"));
     }
 
     @Override

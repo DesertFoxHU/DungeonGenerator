@@ -1,5 +1,6 @@
 package me.desertfox.dgen;
 
+import org.bukkit.block.data.type.Jigsaw;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,5 +30,15 @@ public enum Direction4 {
         if(dir == Direction4.WEST) return Direction4.EAST;
         else if(dir == Direction4.EAST) return Direction4.WEST;
         return Direction4.NORTH;
+    }
+
+    public static Direction4 convertFrom(Jigsaw.Orientation orientation){
+        return switch (orientation) {
+            case DOWN_EAST, UP_EAST, EAST_UP -> Direction4.EAST;
+            case DOWN_NORTH, UP_NORTH, NORTH_UP -> Direction4.NORTH;
+            case DOWN_SOUTH, UP_SOUTH, SOUTH_UP -> Direction4.SOUTH;
+            case DOWN_WEST, UP_WEST, WEST_UP -> Direction4.WEST;
+            default -> throw new IllegalArgumentException("Unsupported orientation: " + orientation);
+        };
     }
 }

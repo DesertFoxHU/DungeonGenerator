@@ -39,7 +39,7 @@ public class IsaacLikeGenerator extends ChunkGenerator {
         for(RoomSchematic schema : RoomSchematic.getRooms()){
             String name = schema.getSchematicName();
             if(name.startsWith("isaac")){
-                int doors = schema.getDoors().length;
+                int doors = schema.getDoors().size();
                 ROOMS.put(schema, --doors);
             }
         }
@@ -89,7 +89,6 @@ public class IsaacLikeGenerator extends ChunkGenerator {
         AbstractRoom room = getDungeon().safeClaim(getRandomByDoors(randomNumber), start).placeDown();
         Bukkit.getLogger().info("Start location: " + start + " placed: " + room.getSchematicName() + " remaining score: " + score);
         registerBuilding(room, start, null);
-        List<String> pool = ROOMS.keySet().stream().map(RoomSchematic::getSchematicName).toList();
         do{
             randomNumber = randomGen(1, Math.min(3, score));
             int inDoors = randomNumber+1;
@@ -98,7 +97,7 @@ public class IsaacLikeGenerator extends ChunkGenerator {
             Tuple<Direction4, Location> entry = array.get(0);
 
             Direction4 flip = Direction4.flip(entry.a());
-            List<RoomSchematic> possibilities = RoomSchematic.findByDoors(pool, inDoors, flip);
+            List<RoomSchematic> possibilities = RoomSchematic.findByDoors(ROOMS.keySet().stream().toList(), inDoors, flip);
             RoomSchematic schema = possibilities.get(new Random(seed).nextInt(possibilities.size()));
             Bukkit.getLogger().info("  Building " + schema.getSchematicName() + " in " + entry.b());
             room = getDungeon().safeClaim(schema, entry.b()).placeDown();
@@ -120,7 +119,7 @@ public class IsaacLikeGenerator extends ChunkGenerator {
             logicA(doors, entry.b(), Direction4.EAST);
             logicA(doors, entry.b(), Direction4.NORTH);
             logicA(doors, entry.b(), Direction4.SOUTH);
-            List<RoomSchematic> possibilities = RoomSchematic.findByExactDoors(pool, doors.toArray(new Direction4[0]));
+            List<RoomSchematic> possibilities = RoomSchematic.findByExactDoors(ROOMS.keySet().stream().toList(), doors.toArray(new Direction4[0]));
             if(possibilities.isEmpty()){
                 Bukkit.getLogger().info("There are no solution for these doors: " + doors.size());
                 for(Direction4 dir : doors){
