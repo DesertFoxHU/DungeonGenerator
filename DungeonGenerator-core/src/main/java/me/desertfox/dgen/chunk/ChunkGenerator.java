@@ -2,7 +2,7 @@ package me.desertfox.dgen.chunk;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.desertfox.dgen.Dungeon;
+import me.desertfox.dgen.AbstractDungeon;
 import me.desertfox.dgen.chunk.gens.*;
 import me.desertfox.dgen.room.RoomSchematic;
 import org.bukkit.Location;
@@ -67,7 +67,7 @@ public abstract class ChunkGenerator {
         roomPool = new ArrayList<>(RoomSchematic.getRooms());
     }
 
-    public Dungeon getDungeon(){
+    public AbstractDungeon getDungeon(){
         return shard.getDungeon();
     }
 

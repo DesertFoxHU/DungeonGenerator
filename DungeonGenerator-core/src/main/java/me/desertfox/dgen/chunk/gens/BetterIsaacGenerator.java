@@ -1,6 +1,7 @@
 package me.desertfox.dgen.chunk.gens;
 
-import me.desertfox.dgen.Dungeon;
+import me.desertfox.dgen.AbstractDungeon;
+import me.desertfox.dgen.DefaultDungeon;
 import me.desertfox.dgen.chunk.ChunkGenerator;
 import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.dgen.examples.IsaacMatrix;
@@ -17,12 +18,12 @@ public class BetterIsaacGenerator extends ChunkGenerator {
     public static int SHARD_SIZE_XZ = 64*3;
     public static int SMALLEST_ROOM_SIZE = 8;
 
-    public static Dungeon build(JavaPlugin plugin, String id, Location location){
-        return new Dungeon.Builder(plugin, id, location, SHARD_SIZE_XZ, 200, SHARD_SIZE_XZ)
+    public static AbstractDungeon build(JavaPlugin plugin, String id, Location location){
+        return new AbstractDungeon.Builder(plugin, id, location, SHARD_SIZE_XZ, 200, SHARD_SIZE_XZ)
                 .setMinRoomSizeXZ(SMALLEST_ROOM_SIZE)
                 .shardSizeX(SHARD_SIZE_XZ)
                 .shardSizeZ(SHARD_SIZE_XZ)
-                .build();
+                .build(DefaultDungeon.class);
     }
 
     HashMap<RoomSchematic, Integer> ROOMS = new HashMap<>();
@@ -33,7 +34,7 @@ public class BetterIsaacGenerator extends ChunkGenerator {
         for(RoomSchematic schema : RoomSchematic.getRooms()){
             String name = schema.getSchematicName();
             if(name.startsWith("isaac")){
-                int doors = schema.getDoors().size();
+                int doors = schema.getAllDoors().size();
                 ROOMS.put(schema, --doors);
                 roomPool.add(schema);
             }

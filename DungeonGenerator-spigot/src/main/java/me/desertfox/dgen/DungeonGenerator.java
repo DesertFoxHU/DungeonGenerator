@@ -29,7 +29,7 @@ public class DungeonGenerator extends JavaPlugin {
         DungeonCommand.register(this);
         //test1();
         //test2();
-        Dungeon dungeon = BetterIsaacGenerator.build(this, "test", new Location(Bukkit.getWorld("world"), 0, 65, 0));
+        AbstractDungeon dungeon = BetterIsaacGenerator.build(this, "test", new Location(Bukkit.getWorld("world"), 0, 65, 0));
 
         getCommand("generate").setExecutor(new GenerateCommand());
         getCommand("generate").setTabCompleter(new GenerateCommandTab());
@@ -39,19 +39,19 @@ public class DungeonGenerator extends JavaPlugin {
     }
 
     public void test1(){
-        Dungeon dungeon = new Dungeon.Builder(this, "test",
+        AbstractDungeon dungeon = new AbstractDungeon.Builder(this, "test",
                 new Location(Bukkit.getWorld("world"), 0, 65, 0),
-                200, 200, 200).setMinRoomSizeXZ(4).build();
+                200, 200, 200).setMinRoomSizeXZ(4).build(DefaultDungeon.class);
         Bukkit.getLogger().info("Loaded " + dungeon.getId() + " dungeon!");
     }
 
     public void test2(){
-        Dungeon dungeon = new Dungeon.Builder(this, "test",
+        AbstractDungeon dungeon = new AbstractDungeon.Builder(this, "test",
                 new Location(Bukkit.getWorld("world"), 0, 65, 0), 64*5, 200, 64*5)
                 .setMinRoomSizeXZ(4)
                 .shardSizeX(64)
                 .shardSizeZ(64)
-                .build();
+                .build(DefaultDungeon.class);
     }
 
     public void onDisable() {

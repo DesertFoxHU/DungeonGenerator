@@ -1,6 +1,5 @@
 package me.desertfox.dgen.commands;
 
-import me.desertfox.dgen.Dungeon;
 import me.desertfox.dgen.DungeonGenerator;
 import me.desertfox.dgen.schematic.OperationalSchematic;
 import me.desertfox.dgen.schematic.framework.Rotation;

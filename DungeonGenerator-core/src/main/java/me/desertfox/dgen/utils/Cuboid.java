@@ -36,6 +36,28 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
                 return xOverlap && yOverlap && zOverlap;
         }
 
+        public List<Block> getWalls(){
+                List<Block> walls = new ArrayList<>();
+                for (int x = x1; x <= x2; x++) {
+                        for (int y = y1; y <= y2; y++) {
+                                for (int z = z1; z <= z2; z++) {
+                                        // Add blocks only if they are on a wall
+                                        if (isWallBlock(x, y, z)) {
+                                                walls.add(new Location(world, x, y, z).getBlock());
+                                        }
+                                }
+                        }
+                }
+                return walls;
+        }
+
+        private boolean isWallBlock(int x, int y, int z) {
+                if (x == x1 || x == x2) return true;
+                if (y == y1 || y == y2) return true;
+                if (z == z1 || z == z2) return true;
+                return false;
+        }
+
         public Block getFirstNotAirBlock(){
                 for(Block block : getBlocks()){
                         if(block.getType() != Material.AIR){

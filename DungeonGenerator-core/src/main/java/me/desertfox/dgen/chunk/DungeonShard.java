@@ -3,10 +3,11 @@ package me.desertfox.dgen.chunk;
 import lombok.Getter;
 
 import lombok.Setter;
+import me.desertfox.dgen.AbstractDungeon;
 import me.desertfox.dgen.Direction4;
-import me.desertfox.dgen.Dungeon;
 import me.desertfox.dgen.room.AbstractRoom;
 import me.desertfox.dgen.utils.Cuboid;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +20,7 @@ import java.util.*;
  */
 @Getter
 public class DungeonShard {
-    private final Dungeon dungeon;
+    private final AbstractDungeon dungeon;
     private final int indexX;
     private final int indexY;
     private final int coordX;
@@ -33,7 +34,7 @@ public class DungeonShard {
     public AbstractRoom[][] roomGrid;
     public ChunkGenerator generator;
 
-    public DungeonShard(Dungeon dungeon, Class<? extends ChunkGenerator> generatorClass, int indexX, int indexY, int coordX, int coordY, int coordZ, int endX, int endY, int endZ) {
+    public DungeonShard(AbstractDungeon dungeon, Class<? extends ChunkGenerator> generatorClass, int indexX, int indexY, int coordX, int coordY, int coordZ, int endX, int endY, int endZ) {
         this.dungeon = dungeon;
         this.indexX = indexX;
         this.indexY = indexY;
@@ -339,6 +340,18 @@ public class DungeonShard {
             dungeon.getWorld().getBlockAt(minX, coordY-1, z).setType(Material.BLACK_WOOL);
             dungeon.getWorld().getBlockAt(maxX, coordY-1, z).setType(Material.BLACK_WOOL);
         }
+    }
+
+    public List<AbstractRoom> getActiveRooms(){
+        List<AbstractRoom> roomList = new ArrayList<>();
+        for (AbstractRoom[] row : roomGrid) {
+            for (AbstractRoom room : row) {
+                if (room != null) {
+                    roomList.add(room);
+                }
+            }
+        }
+        return roomList;
     }
 
     public Location getStart(){

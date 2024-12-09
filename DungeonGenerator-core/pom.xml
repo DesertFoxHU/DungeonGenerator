@@ -59,6 +59,18 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.11.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -105,21 +117,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.sk89q.worldedit</groupId>
-            <artifactId>worldedit-bukkit</artifactId>
-            <version>7.3.6</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.32</version>
+            <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.DesertFoxHU</groupId>
-            <artifactId>GeneralLibrary</artifactId>
-            <version>${general.library}</version>
+            <groupId>me.desertfox.gl</groupId>
+            <artifactId>GeneralLibrary-v1_19_R0</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
         <dependency>

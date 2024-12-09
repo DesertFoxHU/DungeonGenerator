@@ -30,11 +30,18 @@ public class OperationalSchematic implements Cloneable {
   }
 
   public List<Block> populate(Location start, Vector shift){
-    return populate(start, shift, false);
+    return populate(start, shift, false, false);
   }
 
-  public List<Block> populate(Location start, Vector shift, boolean onlyReplaceAir){
+  public List<Block> populate(Location start, Vector shift, boolean clearArea){
+    return populate(start, shift, false, clearArea);
+  }
+
+  public List<Block> populate(Location start, Vector shift, boolean onlyReplaceAir, boolean clearArea){
     List<Block> blocks = new ArrayList<>();
+    if(clearArea){
+      getCuboid(start, shift).clearRegion();
+    }
     start = start.clone().add(shift);
     for(Data d : data){
       int X = (int) (start.getX() - d.relative.getX());

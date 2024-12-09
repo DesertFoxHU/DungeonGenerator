@@ -1,6 +1,6 @@
 package me.desertfox.dgen.commands;
 
-import me.desertfox.dgen.Dungeon;
+import me.desertfox.dgen.AbstractDungeon;
 import me.desertfox.dgen.chunk.ChunkGenerator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,7 +17,7 @@ public class DungeonCommandTab implements TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length == 1){
-            return Dungeon.getDungeons().stream().map(Dungeon::getId).toList();
+            return AbstractDungeon.getDungeons().stream().map(AbstractDungeon::getId).toList();
         }
         else if(args.length == 3){
             return Arrays.asList("true", "false");

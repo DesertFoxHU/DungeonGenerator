@@ -1,7 +1,8 @@
 package me.desertfox.dgen.chunk.gens;
 
+import me.desertfox.dgen.AbstractDungeon;
+import me.desertfox.dgen.DefaultDungeon;
 import me.desertfox.dgen.Direction4;
-import me.desertfox.dgen.Dungeon;
 import me.desertfox.dgen.chunk.ChunkGenerator;
 import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.dgen.room.AbstractRoom;
@@ -16,12 +17,12 @@ import java.util.*;
 
 public class IsaacLikeGenerator extends ChunkGenerator {
 
-    public static Dungeon build(JavaPlugin plugin, String id, Location location){
-        return new Dungeon.Builder(plugin, id, location, 64*4, 200, 64*4)
+    public static AbstractDungeon build(JavaPlugin plugin, String id, Location location){
+        return new AbstractDungeon.Builder(plugin, id, location, 64*4, 200, 64*4)
                 .setMinRoomSizeXZ(8)
                 .shardSizeX(64*4)
                 .shardSizeZ(64*4)
-                .build();
+                .build(DefaultDungeon.class);
     }
 
     private static final HashMap<Integer, Integer> DOOR_COST = new HashMap<>(){{

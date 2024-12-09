@@ -1,6 +1,6 @@
 package me.desertfox.dgen.commands;
 
-import me.desertfox.dgen.Dungeon;
+import me.desertfox.dgen.AbstractDungeon;
 import me.desertfox.dgen.chunk.ChunkGenerator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -37,7 +37,11 @@ public class DungeonCommand implements CommandExecutor {
         String id = args[0];
         if(args.length == 2){
             if(args[1].equalsIgnoreCase("clear")){
-                Dungeon dungeon = Dungeon.findByID(id);
+                AbstractDungeon dungeon = AbstractDungeon.findByID(id);
+                if(dungeon == null){
+                    player.sendMessage("§4§lDidn't found dungeon by id: " + id);
+                    return false;
+                }
                 dungeon.clearQueue();
                 player.sendMessage("§2§lStarted clearing!");
             }
@@ -48,8 +52,9 @@ public class DungeonCommand implements CommandExecutor {
                 boolean debug = Boolean.parseBoolean(args[2]);
                 String generator = args[3];
 
-                Dungeon dungeon = Dungeon.findByID(id);
-                dungeon.generateAll(debug, ChunkGenerator.findByClassName(generator));
+                AbstractDungeon dungeon = AbstractDungeon.findByID(id);
+                dungeon.configShards(debug, ChunkGenerator.findByClassName(generator));
+                dungeon.generateAll();
                 player.sendMessage("§2§lStarted generating!");
             }
             return false;

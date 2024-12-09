@@ -169,7 +169,6 @@ public class RoomSchematic {
             for(int x = 0; x < gridX; x++){
                 for(int z = 0; z < gridZ; z++){
                     doors.put(new Index(x, z), new ArrayList<>());
-                    Bukkit.getLogger().info("Adding new index of {" + x + ";" + z + "}");
                 }
             }
 
@@ -184,7 +183,6 @@ public class RoomSchematic {
                 int gridPosZ = Math.abs(z / gridSizeZ);
 
                 doors.get(getIndex(gridPosX, gridPosZ)).add(dir);
-                Bukkit.getLogger().info("Adding {" + gridPosX + "," + gridPosZ + "} with " + dir + " for: " + x + " " + y + " " + z);
             }
         }
         else {
@@ -197,8 +195,15 @@ public class RoomSchematic {
     }
 
     public boolean containsDir4(Index index, Direction4 dir){
-        if(doors == null) return false;
-        return doors.get(index).contains(dir);
+        if(!doors.containsKey(index)){
+            return false;
+        }
+        List<Direction4> door = doors.get(index);
+        if(door == null) {
+            return false;
+        }
+
+        return door.contains(dir);
     }
 
     public List<Direction4> getAllDoors(){

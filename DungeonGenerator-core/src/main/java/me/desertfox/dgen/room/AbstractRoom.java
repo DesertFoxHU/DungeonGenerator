@@ -11,7 +11,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,14 +18,14 @@ import java.util.List;
  */
 public abstract class AbstractRoom {
 
-    @Getter private final DungeonShard chunk;
+    @Getter private final DungeonShard shard;
     @Getter private final String schematicName;
     @Getter private final Location location;
     @Getter private final Cuboid region;
     @Getter private final List<Direction4> doors;
 
-    public AbstractRoom(DungeonShard chunk, String schematicName, Location location, Cuboid region, List<Direction4> doors) {
-        this.chunk = chunk;
+    public AbstractRoom(DungeonShard shard, String schematicName, Location location, Cuboid region, List<Direction4> doors) {
+        this.shard = shard;
         this.schematicName = schematicName;
         this.location = location;
         this.region = region;
@@ -35,26 +34,26 @@ public abstract class AbstractRoom {
         int sizeX = region.getSizeX()+1;
         int sizeZ = region.getSizeZ();
 
-        int gridWidth = (int) Math.ceil((double) sizeX / chunk.getDungeon().MIN_ROOM_SIZE_XZ);
-        int gridHeight = (int) Math.ceil((double) sizeZ / chunk.getDungeon().MIN_ROOM_SIZE_XZ);
+        int gridWidth = (int) Math.ceil((double) sizeX / shard.getDungeon().MIN_ROOM_SIZE_XZ);
+        int gridHeight = (int) Math.ceil((double) sizeZ / shard.getDungeon().MIN_ROOM_SIZE_XZ);
 
-        int relativeX = location.getBlockX() - chunk.getStart().getBlockX();
-        int relativeZ = location.getBlockZ() - chunk.getStart().getBlockZ();
+        int relativeX = location.getBlockX() - shard.getStart().getBlockX();
+        int relativeZ = location.getBlockZ() - shard.getStart().getBlockZ();
 
-        int startCol = relativeX / chunk.getDungeon().MIN_ROOM_SIZE_XZ;
-        int startRow = relativeZ / chunk.getDungeon().MIN_ROOM_SIZE_XZ;
+        int startCol = relativeX / shard.getDungeon().MIN_ROOM_SIZE_XZ;
+        int startRow = relativeZ / shard.getDungeon().MIN_ROOM_SIZE_XZ;
 
         for (int row = startRow; row < startRow + gridHeight; row++) {
             for (int col = startCol; col < startCol + gridWidth; col++) {
-                if (!(col >= 0 && col < chunk.roomGrid[0].length)) {
+                if (!(col >= 0 && col < shard.roomGrid[0].length)) {
                     Bukkit.getLogger().info("Skipping column: " + col + " (out of bounds) " + location);
                 }
 
-                if (row >= 0 && row < chunk.roomGrid.length && col >= 0 && col < chunk.roomGrid[0].length) {
-                    chunk.roomGrid[row][col] = this;
-                    if(getChunk().isDebug())
+                if (row >= 0 && row < shard.roomGrid.length && col >= 0 && col < shard.roomGrid[0].length) {
+                    shard.roomGrid[row][col] = this;
+                    if(getShard().isDebug())
                     {
-                        Cuboid grid = chunk.getGridCuboid(row, col);
+                        Cuboid grid = shard.getGridCuboid(row, col);
                         grid = grid.expand(Cuboid.CuboidDirection.Up, -grid.getSizeY());
                         grid = grid.expand(Cuboid.CuboidDirection.Down, 1);
                         grid = grid.expand(Cuboid.CuboidDirection.Up, -1);
