@@ -1,21 +1,22 @@
 package me.desertfox.dgen.chunk.gens;
 
-import me.desertfox.dgen.chunk.ChunkGenerator;
+import me.desertfox.dgen.chunk.ShardGenerator;
 import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.dgen.room.AbstractRoom;
 import me.desertfox.dgen.utils.Utils;
 import org.bukkit.Location;
-import org.joml.Random;
 
-public class GameGenerator extends ChunkGenerator {
+import java.util.Random;
 
-    long seed = Random.newSeed();
+public class GameGenerator extends ShardGenerator {
+
+    long seed = new Random().nextLong();
     public GameGenerator(DungeonShard chunk) {
         super(chunk);
     }
 
     @Override
-    public void begin(Location start) {
+    public void begin(Location start, Object... params) {
         int numberOfRooms = new Random(seed).nextInt(8 - 3) + 3;
         for(int i = 0; i < numberOfRooms; i++){
             getDungeon().updateOnQueue((dg) -> {

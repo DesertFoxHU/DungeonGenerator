@@ -1,7 +1,7 @@
 package me.desertfox.dgen.commands.tab;
 
 import me.desertfox.dgen.AbstractDungeon;
-import me.desertfox.dgen.chunk.ChunkGenerator;
+import me.desertfox.dgen.chunk.ShardGenerator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -23,7 +23,7 @@ public class GenerateCommandTab implements TabCompleter {
             return Arrays.asList("true", "false");
         }
         else if(args.length == 3){
-            return ChunkGenerator.getGENERATOR_REGISTRY().keySet().stream().toList();
+            return ShardGenerator.getGENERATOR_REGISTRY().keySet().stream().toList();
         }
         return null;
     }

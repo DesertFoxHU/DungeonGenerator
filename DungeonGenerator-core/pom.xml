@@ -124,7 +124,7 @@
         </dependency>
         <dependency>
             <groupId>me.desertfox.gl</groupId>
-            <artifactId>GeneralLibrary-v1_19_R0</artifactId>
+            <artifactId>GeneralLibrary-v1_21_R1</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->

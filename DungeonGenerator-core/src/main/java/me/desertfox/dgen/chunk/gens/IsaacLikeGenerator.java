@@ -3,7 +3,7 @@ package me.desertfox.dgen.chunk.gens;
 import me.desertfox.dgen.AbstractDungeon;
 import me.desertfox.dgen.DefaultDungeon;
 import me.desertfox.dgen.Direction4;
-import me.desertfox.dgen.chunk.ChunkGenerator;
+import me.desertfox.dgen.chunk.ShardGenerator;
 import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.dgen.room.AbstractRoom;
 import me.desertfox.dgen.room.RoomSchematic;
@@ -15,7 +15,7 @@ import org.joml.Random;
 
 import java.util.*;
 
-public class IsaacLikeGenerator extends ChunkGenerator {
+public class IsaacLikeGenerator extends ShardGenerator {
 
     public static AbstractDungeon build(JavaPlugin plugin, String id, Location location){
         return new AbstractDungeon.Builder(plugin, id, location, 64*4, 200, 64*4)
@@ -78,7 +78,7 @@ public class IsaacLikeGenerator extends ChunkGenerator {
 
     public List<Tuple<Direction4, Location>> array = new ArrayList<>();
     @Override
-    public void begin(Location start) {
+    public void begin(Location start, Object... params) {
         Bukkit.getLogger().info("Seed: " + seed);
         int numberOfRooms = randomGen(15, 30);
         Bukkit.getLogger().info("Generating " + numberOfRooms + " rooms!");

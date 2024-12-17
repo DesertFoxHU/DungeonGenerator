@@ -1,7 +1,7 @@
 package me.desertfox.dgen.commands;
 
 import me.desertfox.dgen.AbstractDungeon;
-import me.desertfox.dgen.chunk.ChunkGenerator;
+import me.desertfox.dgen.chunk.ShardGenerator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,7 +30,7 @@ public class DungeonCommand implements CommandExecutor {
 
         if(args.length == 0){
             player.sendMessage("§c/dungeon [id] clear");
-            player.sendMessage("§c/dungeon [id] generate [debug] [generatorName]");
+            player.sendMessage("§c/dungeon [id] generate [debug] [generatorName] <param1>,<param2>,...");
             return false;
         }
 
@@ -53,8 +53,22 @@ public class DungeonCommand implements CommandExecutor {
                 String generator = args[3];
 
                 AbstractDungeon dungeon = AbstractDungeon.findByID(id);
-                dungeon.configShards(debug, ChunkGenerator.findByClassName(generator));
+                dungeon.configShards(debug, ShardGenerator.findByClassName(generator));
                 dungeon.generateAll();
+                player.sendMessage("§2§lStarted generating!");
+            }
+            return false;
+        }
+
+        if(args.length == 5){
+            if(args[1].equalsIgnoreCase("generate")){
+                boolean debug = Boolean.parseBoolean(args[2]);
+                String generator = args[3];
+
+                AbstractDungeon dungeon = AbstractDungeon.findByID(id);
+                dungeon.configShards(debug, ShardGenerator.findByClassName(generator));
+                String[] params = args[4].split(",");
+                dungeon.generateAll(params);
                 player.sendMessage("§2§lStarted generating!");
             }
             return false;

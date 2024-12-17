@@ -32,9 +32,9 @@ public class DungeonShard {
     private final Cuboid region;
     @Setter private boolean debug;
     public AbstractRoom[][] roomGrid;
-    public ChunkGenerator generator;
+    public ShardGenerator generator;
 
-    public DungeonShard(AbstractDungeon dungeon, Class<? extends ChunkGenerator> generatorClass, int indexX, int indexY, int coordX, int coordY, int coordZ, int endX, int endY, int endZ) {
+    public DungeonShard(AbstractDungeon dungeon, Class<? extends ShardGenerator> generatorClass, int indexX, int indexY, int coordX, int coordY, int coordZ, int endX, int endY, int endZ) {
         this.dungeon = dungeon;
         this.indexX = indexX;
         this.indexY = indexY;
@@ -63,7 +63,7 @@ public class DungeonShard {
      * Sets a new generator but doesn't start the generation process
      * @param generatorClass Generator
      */
-    public void setGenerator(Class<? extends ChunkGenerator> generatorClass) {
+    public void setGenerator(Class<? extends ShardGenerator> generatorClass) {
         try {
             this.generator = generatorClass.getConstructor(DungeonShard.class).newInstance(this);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
@@ -188,6 +188,63 @@ public class DungeonShard {
         return neighbors;
     }
 
+    public List<AbstractRoom> getNeighbors(int x, int z){
+        List<AbstractRoom> neighbors = new ArrayList<>();
+        int[][] directions = {
+                {-1, 0}, // North
+                {1, 0},  // South
+                {0, -1}, // West
+                {0, 1}   // East
+        };
+
+        for (int[] dir : directions) {
+            int neighborRow = z + dir[0];
+            int neighborCol = x + dir[1];
+
+            if (neighborRow >= 0 && neighborRow < roomGrid.length &&
+                    neighborCol >= 0 && neighborCol < roomGrid[0].length) {
+
+                AbstractRoom neighbor = roomGrid[neighborRow][neighborCol];
+                if (neighbor != null) {
+                    neighbors.add(neighbor);
+                }
+            }
+        }
+        return neighbors;
+    }
+
+    public List<Direction4> getNeighborsDir4(int x, int z){
+        List<Direction4> neighbors = new ArrayList<>();
+        int[][] directions = {
+                {-1, 0}, // North
+                {1, 0},  // South
+                {0, -1}, // West
+                {0, 1}   // East
+        };
+
+        for (int[] dir : directions) {
+            int neighborRow = z + dir[0];
+            int neighborCol = x + dir[1];
+
+            Bukkit.getLogger().info("RowCol: " + neighborRow + " " + neighborCol);
+            if (neighborRow >= 0 && neighborRow < roomGrid.length &&
+                    neighborCol >= 0 && neighborCol < roomGrid[0].length) {
+
+                AbstractRoom neighbor = roomGrid[neighborRow][neighborCol];
+                Bukkit.getLogger().info("Neighbor: " + neighbor);
+                if (neighbor != null) {
+                    Direction4 val;
+                    if(dir[0] == -1 && dir[1] == 0) val = Direction4.WEST;
+                    else if(dir[0] == 1 && dir[1] == 0) val = Direction4.EAST;
+                    else if(dir[0] == 0 && dir[1] == -1) val = Direction4.SOUTH;
+                    else val = Direction4.NORTH;
+                    neighbors.add(val);
+                }
+            }
+        }
+        return neighbors;
+    }
+
     /**
      * @param location
      * @return A list of a room's neighbors or an empty list
@@ -301,13 +358,13 @@ public class DungeonShard {
      * Starts the generator to populate the specific shard (chunk)<br>
      * The code first clears the area then starts the generation process
      */
-    public void populate(){
+    public void populate(Object... params){
         region.clearRegion();
         if(debug){
             drawDebug2DBox();
         }
 
-        generator.begin(getStart());
+        generator.begin(getStart(), params);
     }
 
     /**

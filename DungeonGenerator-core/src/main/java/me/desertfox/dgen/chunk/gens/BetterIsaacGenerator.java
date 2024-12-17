@@ -2,7 +2,7 @@ package me.desertfox.dgen.chunk.gens;
 
 import me.desertfox.dgen.AbstractDungeon;
 import me.desertfox.dgen.DefaultDungeon;
-import me.desertfox.dgen.chunk.ChunkGenerator;
+import me.desertfox.dgen.chunk.ShardGenerator;
 import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.dgen.examples.IsaacMatrix;
 import me.desertfox.dgen.room.RoomSchematic;
@@ -13,7 +13,7 @@ import org.joml.Random;
 
 import java.util.*;
 
-public class BetterIsaacGenerator extends ChunkGenerator {
+public class BetterIsaacGenerator extends ShardGenerator {
 
     public static int SHARD_SIZE_XZ = 64*3;
     public static int SMALLEST_ROOM_SIZE = 8;
@@ -46,7 +46,7 @@ public class BetterIsaacGenerator extends ChunkGenerator {
     }
 
     @Override
-    public void begin(Location start) {
+    public void begin(Location start, Object... params) {
         int roomCount = randomGen(50, 100);
         Bukkit.getLogger().info("Generating " + roomCount + " room(s)!");
         IsaacMatrix graph = new IsaacMatrix(seed,SHARD_SIZE_XZ / SMALLEST_ROOM_SIZE, roomCount);

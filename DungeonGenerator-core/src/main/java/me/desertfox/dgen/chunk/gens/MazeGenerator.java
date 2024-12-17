@@ -1,7 +1,7 @@
 package me.desertfox.dgen.chunk.gens;
 
 import me.desertfox.dgen.Direction4;
-import me.desertfox.dgen.chunk.ChunkGenerator;
+import me.desertfox.dgen.chunk.ShardGenerator;
 import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.dgen.room.AbstractRoom;
 import me.desertfox.dgen.room.RoomSchematic;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MazeGenerator extends ChunkGenerator {
+public class MazeGenerator extends ShardGenerator {
 
     public MazeGenerator(DungeonShard chunk) {
         super(chunk);
@@ -23,7 +23,7 @@ public class MazeGenerator extends ChunkGenerator {
 
     public List<Location> array = new ArrayList<>();
     @Override
-    public void begin(Location start) {
+    public void begin(Location start, Object... params) {
         AbstractRoom room = getShard().getDungeon().safeClaim("corridor_SE", start);
         room.placeDown();
         array.add(start.clone().add(Direction4.EAST.vector.getX() * (room.getRegion().getSizeX()+1), 0, Direction4.EAST.vector.getZ() * room.getRegion().getSizeZ()));

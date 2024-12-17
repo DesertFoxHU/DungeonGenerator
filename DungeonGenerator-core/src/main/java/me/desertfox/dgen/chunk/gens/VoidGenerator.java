@@ -1,10 +1,10 @@
 package me.desertfox.dgen.chunk.gens;
 
-import me.desertfox.dgen.chunk.ChunkGenerator;
+import me.desertfox.dgen.chunk.ShardGenerator;
 import me.desertfox.dgen.chunk.DungeonShard;
 import org.bukkit.Location;
 
-public class VoidGenerator extends ChunkGenerator {
+public class VoidGenerator extends ShardGenerator {
 
     public VoidGenerator(DungeonShard chunk) {
         super(chunk);
@@ -12,7 +12,7 @@ public class VoidGenerator extends ChunkGenerator {
     }
 
     @Override
-    public void begin(Location start) {
+    public void begin(Location start, Object... params) {
 
     }
 }

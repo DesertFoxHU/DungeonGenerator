@@ -1,7 +1,7 @@
 package me.desertfox.dgen.chunk.gens;
 
 import me.desertfox.dgen.Direction4;
-import me.desertfox.dgen.chunk.ChunkGenerator;
+import me.desertfox.dgen.chunk.ShardGenerator;
 import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.dgen.room.AbstractRoom;
 import me.desertfox.dgen.room.RoomSchematic;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ConnectedDoorsGenerator extends ChunkGenerator {
+public class ConnectedDoorsGenerator extends ShardGenerator {
 
     public ConnectedDoorsGenerator(DungeonShard chunk) {
         super(chunk);
@@ -29,7 +29,7 @@ public class ConnectedDoorsGenerator extends ChunkGenerator {
 
     public List<Tuple<Direction4, Location>> array = new ArrayList<>();
     @Override
-    public void begin(Location start) {
+    public void begin(Location start, Object... params) {
         call("corridor_WESN", start);
         new BukkitRunnable(){
             @Override

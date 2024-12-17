@@ -3,6 +3,7 @@ package me.desertfox.dgen.schematic;
 import lombok.Getter;
 import me.desertfox.dgen.schematic.framework.Rotation;
 import me.desertfox.dgen.utils.Cuboid;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,6 +13,7 @@ import org.bukkit.block.structure.StructureRotation;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Getter
@@ -21,12 +23,35 @@ public class OperationalSchematic implements Cloneable {
   private Vector pos1;
   private Vector pos2;
   private List<Data> data;
+  private HashMap<String, List<Data>> variantGroups;
 
-  public OperationalSchematic(String name, Vector pos1, Vector pos2, List<Data> data) {
+  public OperationalSchematic(String name, Vector pos1, Vector pos2, List<Data> data, HashMap<String, List<Data>> variantGroups) {
     this.name = name;
     this.pos1 = pos1;
     this.pos2 = pos2;
     this.data = data;
+    this.variantGroups = variantGroups;
+  }
+
+  public List<Block> populateVariantGroup(String variantGroup, Location start, Vector shift, boolean onlyReplaceAir){
+    List<Block> blocks = new ArrayList<>();
+    start = start.clone().add(shift);
+    for(Data d : variantGroups.get(variantGroup)){
+      int X = (int) (start.getX() - d.relative.getX());
+      int Y = (int) (start.getY() - d.relative.getY());
+      int Z = (int) (start.getZ() - d.relative.getZ());
+      Block block = new Location(start.getWorld(), X, Y, Z).getBlock();
+      if(onlyReplaceAir){
+        if(block.getType() == Material.AIR){
+          block.setBlockData(d.bData);
+          blocks.add(block);
+        }
+        continue;
+      }
+      block.setBlockData(d.bData);
+      blocks.add(block);
+    }
+    return blocks;
   }
 
   public List<Block> populate(Location start, Vector shift){

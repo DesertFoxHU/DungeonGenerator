@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * {@link SchematicController#init(JavaPlugin, String)} to init
@@ -132,6 +133,32 @@ public class SchematicController {
     struct.update();
   }
 
+  public static void setVariantGroup(CustomYml yml, Location center, Cuboid cuboid, String groupId){
+    List<String> relativeBlockList = new ArrayList<>();
+    for(Block block : cuboid.getBlocks()){
+      Location currentLocation = block.getLocation();
+      //if (block.getType() == Material.AIR || block.getType() == exclude) continue;
+      int relativeX = center.getBlockX() - currentLocation.getBlockX();
+      int relativeY = center.getBlockY() - currentLocation.getBlockY();
+      int relativeZ = center.getBlockZ() - currentLocation.getBlockZ();
+      String blockData = currentLocation.getBlock().getBlockData().getAsString();
+      if(block.getBlockData() instanceof Jigsaw){
+        continue;
+      }
+      else {
+        relativeBlockList.add(relativeX + " " + relativeY + " " + relativeZ + " " + blockData);
+      }
+    }
+
+    yml.getConfig().set("schematic.variantGroups." + groupId, relativeBlockList);
+    yml.save();
+  }
+
+  public static List<String> getVariantGroups(CustomYml yml){
+    if(yml.getConfig().getConfigurationSection("schematic.variantGroups") == null) return new ArrayList<>();
+    return new ArrayList<>(yml.getConfig().getConfigurationSection("schematic.variantGroups").getKeys(false));
+  }
+
   private static OperationalSchematic loadSchematic(CustomYml yml) {
     FileConfiguration config = yml.getConfig();
     List<String> blockList = config.getStringList("schematic.list");
@@ -151,7 +178,24 @@ public class SchematicController {
       BlockData blockData = Bukkit.createBlockData(splitted[3]);
       data.add(new OperationalSchematic.Data(new Vector(X, Y, Z), blockData));
     }
-    return new OperationalSchematic(yml.file.getName().split("\\.")[0], pos1, pos2, data);
+
+    HashMap<String, List<OperationalSchematic.Data>> variantGroups = new HashMap<>();
+    for(String variantGroup : getVariantGroups(yml)){
+      variantGroups.put(variantGroup, new ArrayList<>());
+      for (String blockRaw : config.getStringList("schematic.variantGroups." + variantGroup)) {
+        String[] splitted = blockRaw.split(" ");
+        int X = Integer.parseInt(splitted[0]);
+        int Y = Integer.parseInt(splitted[1]);
+        int Z = Integer.parseInt(splitted[2]);
+        if(splitted[3].equals("minecraft:grass")){
+          splitted[3] = "minecraft:short_grass";
+          Bukkit.getLogger().warning("Warning! Found minecraft_grass as material in " + yml.file.getName() + " it is outdated! Use short_grass or tall_grass");
+        }
+        BlockData blockData = Bukkit.createBlockData(splitted[3]);
+        variantGroups.get(variantGroup).add(new OperationalSchematic.Data(new Vector(X, Y, Z), blockData));
+      }
+    }
+    return new OperationalSchematic(yml.file.getName().split("\\.")[0], pos1, pos2, data, variantGroups);
   }
 
 }

@@ -1,13 +1,13 @@
 package me.desertfox.dgen.chunk.gens;
 
-import me.desertfox.dgen.chunk.ChunkGenerator;
+import me.desertfox.dgen.chunk.ShardGenerator;
 import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.dgen.room.RoomSchematic;
 import org.bukkit.Location;
 
 import java.util.Random;
 
-public class SimpleGenerator extends ChunkGenerator {
+public class SimpleGenerator extends ShardGenerator {
 
     public SimpleGenerator(DungeonShard chunk) {
         super(chunk);
@@ -19,7 +19,7 @@ public class SimpleGenerator extends ChunkGenerator {
     }
 
     @Override
-    public void begin(Location start) {
+    public void begin(Location start, Object... params) {
         getShard().getDungeon().safeClaim("corridor_WESN", start).placeDown();
 
         int minX = Math.min(start.getBlockX(), getShard().getEnd().getBlockX());

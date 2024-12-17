@@ -87,6 +87,12 @@ public class RoomSchematic {
         return results;
     }
 
+    public static RoomSchematic randomByExactDoors(List<RoomSchematic> pool, Direction4... doors){
+        List<RoomSchematic> possibilities = findByExactDoors(pool, doors);
+        if(possibilities.isEmpty()) return null;
+        return possibilities.get(new Random().nextInt(possibilities.size()));
+    }
+
     public static List<RoomSchematic> findByDoors(List<RoomSchematic> pool, int doorCount){
         List<RoomSchematic> results = new ArrayList<>();
         for(RoomSchematic room : pool){
@@ -117,6 +123,7 @@ public class RoomSchematic {
 
     @Getter private String schematicName;
     @Getter private CustomYml yml;
+    @Getter private List<String> variantGroups = new ArrayList<>();
     @Getter private Map<Index, List<Direction4>> doors = new HashMap<>();
     @Getter private int sizeX;
     @Getter private int sizeY;
@@ -125,7 +132,6 @@ public class RoomSchematic {
     @Getter private int gridSizeZ;
 
     /**
-     *
      * @param plugin
      * @param schematicName without extensions
      */
@@ -138,6 +144,9 @@ public class RoomSchematic {
             sizeX = Math.abs(Integer.parseInt(raw.split(" ")[0])) + 1;
             sizeY = Math.abs(Integer.parseInt(raw.split(" ")[1])) + 1;
             sizeZ = Math.abs(Integer.parseInt(raw.split(" ")[2])) + 1;
+        }
+        if(config.contains("schematic.variantGroups")){
+            variantGroups = SchematicController.getVariantGroups(yml);
         }
 
         align(gridSizeX, gridSizeZ);

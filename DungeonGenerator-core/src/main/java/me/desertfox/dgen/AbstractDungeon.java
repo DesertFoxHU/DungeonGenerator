@@ -1,7 +1,7 @@
 package me.desertfox.dgen;
 
 import lombok.Getter;
-import me.desertfox.dgen.chunk.ChunkGenerator;
+import me.desertfox.dgen.chunk.ShardGenerator;
 import me.desertfox.dgen.chunk.DungeonShard;
 import me.desertfox.dgen.chunk.gens.VoidGenerator;
 import me.desertfox.dgen.room.AbstractRoom;
@@ -10,9 +10,10 @@ import me.desertfox.dgen.room.RoomSchematic;
 import me.desertfox.dgen.schematic.OperationalSchematic;
 import me.desertfox.dgen.schematic.framework.SchematicController;
 import me.desertfox.dgen.utils.Cuboid;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public abstract class AbstractDungeon {
 
@@ -92,6 +94,8 @@ public abstract class AbstractDungeon {
     @Getter private final String id;
     @Getter private final Location start;
     @Getter private final Location end;
+    @Getter private final Cuboid region;
+    @Getter private Cuboid clearRegion;
     @Getter private DungeonShard[][] cells;
     @Getter private int shardCountX = 0;
     @Getter private int shardCountZ = 0;
@@ -115,6 +119,8 @@ public abstract class AbstractDungeon {
         this.MIN_ROOM_SIZE_XZ = MIN_ROOM_SIZE_XZ;
         this.SHARD_SIZE_X = SHARD_SIZE_X;
         this.SHARD_SIZE_Z = SHARD_SIZE_Z;
+        region = new Cuboid(start, end);
+        clearRegion = region.clone();
 
         shardCountX = (int) Math.ceil(Math.abs((double)end.clone().subtract(start).getBlockX()/ SHARD_SIZE_X));
         shardCountZ = (int) Math.ceil(Math.abs((double)end.clone().subtract(start).getBlockZ()/ SHARD_SIZE_Z));
@@ -365,7 +371,7 @@ public abstract class AbstractDungeon {
 
     public World getWorld() { return start.getWorld(); }
 
-    public void configShards(boolean debug, Class<? extends ChunkGenerator> generator){
+    public void configShards(boolean debug, Class<? extends ShardGenerator> generator){
         for (DungeonShard[] dungeonShards : cells) {
             for (DungeonShard cell : dungeonShards) {
                 cell.setDebug(debug);
@@ -377,12 +383,42 @@ public abstract class AbstractDungeon {
     /**
      * Use {@link AbstractDungeon#configShards(boolean, Class)} for once to initialize before using this
      */
-    public void generateAll(){
+    public void generateAll(Object... params){
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
                 DungeonShard cell = cells[i][j];
-                cell.populate();
+                cell.populate(params);
             }
         }
+    }
+
+    /**
+     * Clears the dungeon's region using the {@link AbstractDungeon#clearRegion} field<br>
+     * If there isn't a set clear region then the default region will be used<br>
+     */
+    public void clearRegion(){
+        clearRegion(null);
+    }
+
+    /**
+     * Clears the dungeon's region using the {@link AbstractDungeon#clearRegion} field<br>
+     * If there isn't a set clear region then the default region will be used<br>
+     */
+    public void clearRegion(Predicate<? super Entity> kill){
+        clearRegion.forEach(b -> b.setType(Material.AIR));
+        for(Entity entity : clearRegion.getWorld().getEntities().stream().filter(kill).toList()) {
+            if (clearRegion.contains(entity.getLocation())) {
+                entity.remove();
+            }
+        }
+    }
+
+    /**
+     * Sets the current clear region which is used when<br>
+     * {@link AbstractDungeon#clearRegion()}
+     * @param region
+     */
+    public void setClearRegion(Cuboid region){
+        this.clearRegion = region.clone();
     }
 }

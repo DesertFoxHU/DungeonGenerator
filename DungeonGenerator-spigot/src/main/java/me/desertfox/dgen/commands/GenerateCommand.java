@@ -1,7 +1,7 @@
 package me.desertfox.dgen.commands;
 
 import me.desertfox.dgen.AbstractDungeon;
-import me.desertfox.dgen.chunk.ChunkGenerator;
+import me.desertfox.dgen.chunk.ShardGenerator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,7 +28,7 @@ public class GenerateCommand implements CommandExecutor {
         String generator = args[2];
 
         AbstractDungeon dungeon = AbstractDungeon.findByID(id);
-        dungeon.configShards(debug, ChunkGenerator.findByClassName(generator));
+        dungeon.configShards(debug, ShardGenerator.findByClassName(generator));
         dungeon.generateAll();
         player.sendMessage("§2§lStarted!");
         return false;
