@@ -406,7 +406,7 @@ public class DungeonShard {
         region.expand(Cuboid.CuboidDirection.Down, 1).clearRegion();
         for (AbstractRoom[] abstractRooms : roomGrid) {
             for(AbstractRoom room : abstractRooms){
-                room.destroy();
+                if(room != null) room.destroy();
             }
             Arrays.fill(abstractRooms, null);
         }
