@@ -27,13 +27,13 @@
 -windowtitle
 'DungeonGenerator-core 1.0 API'
 me.desertfox.dgen
-me.desertfox.dgen.chunk
-me.desertfox.dgen.chunk.gens
 me.desertfox.dgen.commands
 me.desertfox.dgen.examples
 me.desertfox.dgen.room
 me.desertfox.dgen.schematic.framework
 me.desertfox.dgen.schematic
+me.desertfox.dgen.shard
+me.desertfox.dgen.shard.gens
 me.desertfox.dgen.utils
 C:\Users\meste\.m2\repository\io\papermc\paper\paper-api\1.21.1-R0.1-SNAPSHOT\paper-api-1.21.1-R0.1-SNAPSHOT.jar = 1732219130456
 C:\Users\meste\.m2\repository\com\mojang\brigadier\1.2.9\brigadier-1.2.9.jar = 1718977233673
@@ -120,27 +120,27 @@ C:\Users\meste\.m2\repository\org\apache\httpcomponents\httpcore\4.4.16\httpcore
 C:\Users\meste\.m2\repository\commons-codec\commons-codec\1.16.0\commons-codec-1.16.0.jar = 1718977236942
 C:\Users\meste\.m2\repository\org\slf4j\jcl-over-slf4j\1.7.36\jcl-over-slf4j-1.7.36.jar = 1718977236915
 C:\Users\meste\.m2\repository\org\projectlombok\lombok\1.18.30\lombok-1.18.30.jar = 1718977237263
-C:\Users\meste\.m2\repository\me\desertfox\gl\GeneralLibrary-v1_21_R1\1.0-SNAPSHOT\GeneralLibrary-v1_21_R1-1.0-SNAPSHOT.jar = 1734276338485
+C:\Users\meste\.m2\repository\me\desertfox\gl\GeneralLibrary-v1_21_R1\1.0-SNAPSHOT\GeneralLibrary-v1_21_R1-1.0-SNAPSHOT.jar = 1734957218049
 C:\Users\meste\.m2\repository\org\jetbrains\annotations\24.1.0\annotations-24.1.0.jar = 1718977232132
 C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\src\main\java = 1733595787405
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\generated-sources\annotations = 1734459948392
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\allclasses-index.html = 1734459956916
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\allpackages-index.html = 1734459956919
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\copy.svg = 1734459956973
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\element-list = 1734459956671
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\help-doc.html = 1734459956968
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\index-all.html = 1734459956956
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\index.html = 1734459956894
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\link.svg = 1734459956974
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\member-search-index.js = 1734459956924
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\module-search-index.js = 1734459956921
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\overview-summary.html = 1734459956963
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\overview-tree.html = 1734459956890
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\package-search-index.js = 1734459956922
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\script.js = 1734459956972
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\search-page.js = 1734459956979
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\search.html = 1734459956960
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\search.js = 1734459956977
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\stylesheet.css = 1734459956970
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\tag-search-index.js = 1734459956925
-C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\type-search-index.js = 1734459956923
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\generated-sources\annotations = 1735166498268
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\allclasses-index.html = 1735166507043
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\allpackages-index.html = 1735166507046
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\copy.svg = 1735166507098
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\element-list = 1735166506822
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\help-doc.html = 1735166507093
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\index-all.html = 1735166507081
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\index.html = 1735166507024
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\link.svg = 1735166507099
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\member-search-index.js = 1735166507053
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\module-search-index.js = 1735166507048
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\overview-summary.html = 1735166507088
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\overview-tree.html = 1735166507021
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\package-search-index.js = 1735166507049
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\script.js = 1735166507097
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\search-page.js = 1735166507103
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\search.html = 1735166507086
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\search.js = 1735166507100
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\stylesheet.css = 1735166507095
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\tag-search-index.js = 1735166507054
+C:\Users\meste\Desktop\IdeaProjects\DungeonGenerator\DungeonGenerator-core\target\reports\apidocs\type-search-index.js = 1735166507050

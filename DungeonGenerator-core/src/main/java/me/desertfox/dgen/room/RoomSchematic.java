@@ -35,7 +35,8 @@ public class RoomSchematic {
      * @param plugin
      * @param directory
      */
-    public static void IOLoadAll(JavaPlugin plugin, String directory){
+    public static List<RoomSchematic> IOLoadAll(JavaPlugin plugin, String directory){
+        List<RoomSchematic> list = new ArrayList<>();
         File dir = new File(plugin.getDataFolder() + File.separator + directory);
         if(!dir.exists()){
             dir.mkdirs();
@@ -43,9 +44,10 @@ public class RoomSchematic {
 
         if(dir.listFiles() != null){
             for(File file : dir.listFiles()){
-                new RoomSchematic(plugin, file.getName().split("\\.")[0], 8, 8);
+                list.add(new RoomSchematic(plugin, file.getName().split("\\.")[0], 8, 8));
             }
         }
+        return list;
     }
 
     /**

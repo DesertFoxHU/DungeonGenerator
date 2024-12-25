@@ -1,9 +1,9 @@
 me.desertfox.dgen
-me.desertfox.dgen.chunk
-me.desertfox.dgen.chunk.gens
 me.desertfox.dgen.commands
 me.desertfox.dgen.examples
 me.desertfox.dgen.room
 me.desertfox.dgen.schematic
 me.desertfox.dgen.schematic.framework
+me.desertfox.dgen.shard
+me.desertfox.dgen.shard.gens
 me.desertfox.dgen.utils

@@ -1,9 +1,9 @@
 package me.desertfox.dgen;
 
 import lombok.Getter;
-import me.desertfox.dgen.chunk.ShardGenerator;
-import me.desertfox.dgen.chunk.DungeonShard;
-import me.desertfox.dgen.chunk.gens.VoidGenerator;
+import me.desertfox.dgen.shard.ShardGenerator;
+import me.desertfox.dgen.shard.DungeonShard;
+import me.desertfox.dgen.shard.gens.VoidGenerator;
 import me.desertfox.dgen.room.AbstractRoom;
 import me.desertfox.dgen.room.Room;
 import me.desertfox.dgen.room.RoomSchematic;
@@ -165,6 +165,8 @@ public abstract class AbstractDungeon {
     }
 
     /**
+     * Retrieves all active rooms across all shards
+     *
      * @return All active rooms across all shards
      */
     public List<AbstractRoom> getActiveRooms(){
@@ -353,8 +355,8 @@ public abstract class AbstractDungeon {
         int relativeX = location.getBlockX() - start.getBlockX(); //88
         int relativeZ = location.getBlockZ() - start.getBlockZ(); //20
 
-        int i = relativeZ / SHARD_SIZE_Z;
-        int j = relativeX / SHARD_SIZE_X;
+        int i = relativeX / SHARD_SIZE_X;
+        int j = relativeZ / SHARD_SIZE_Z;
 
         if (i >= 0 && i < cells.length && j >= 0 && j < cells[i].length) {
             return cells[i][j];
@@ -371,6 +373,11 @@ public abstract class AbstractDungeon {
 
     public World getWorld() { return start.getWorld(); }
 
+    /**
+     * Set all of the shards' generator class and debug info
+     * @param debug Pass debug data
+     * @param generator The generator
+     */
     public void configShards(boolean debug, Class<? extends ShardGenerator> generator){
         for (DungeonShard[] dungeonShards : cells) {
             for (DungeonShard cell : dungeonShards) {

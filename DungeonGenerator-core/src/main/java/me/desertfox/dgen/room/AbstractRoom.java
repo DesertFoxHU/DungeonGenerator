@@ -2,7 +2,7 @@ package me.desertfox.dgen.room;
 
 import lombok.Getter;
 import me.desertfox.dgen.Direction4;
-import me.desertfox.dgen.chunk.DungeonShard;
+import me.desertfox.dgen.shard.DungeonShard;
 import me.desertfox.dgen.schematic.OperationalSchematic;
 import me.desertfox.dgen.schematic.framework.SchematicController;
 import me.desertfox.dgen.utils.Cuboid;
@@ -42,14 +42,14 @@ public abstract class AbstractRoom {
         int sizeX = region.getSizeX()+1;
         int sizeZ = region.getSizeZ();
 
-        gridWidth = (int) Math.ceil((double) sizeX / shard.getDungeon().MIN_ROOM_SIZE_XZ);
-        gridHeight = (int) Math.ceil((double) sizeZ / shard.getDungeon().MIN_ROOM_SIZE_XZ);
+        gridWidth = (int) Math.ceil((double) sizeZ / shard.getDungeon().MIN_ROOM_SIZE_XZ);
+        gridHeight = (int) Math.ceil((double) sizeX / shard.getDungeon().MIN_ROOM_SIZE_XZ);
 
         int relativeX = location.getBlockX() - shard.getStart().getBlockX();
         int relativeZ = location.getBlockZ() - shard.getStart().getBlockZ();
 
-        startCol = relativeX / shard.getDungeon().MIN_ROOM_SIZE_XZ;
-        startRow = relativeZ / shard.getDungeon().MIN_ROOM_SIZE_XZ;
+        startRow = relativeX / shard.getDungeon().MIN_ROOM_SIZE_XZ;
+        startCol = relativeZ / shard.getDungeon().MIN_ROOM_SIZE_XZ;
 
         for (int row = startRow; row < startRow + gridHeight; row++) {
             for (int col = startCol; col < startCol + gridWidth; col++) {
@@ -72,6 +72,25 @@ public abstract class AbstractRoom {
         }
     }
 
+    /**
+     * Returns the array of grid indexes this room have<br>
+     * The elements (int[]) first number is the row the second is the column for the grid<br>
+     * <pre>
+     *     List&lt;int[]&gt; indexes = room.getGrindIndexes();
+     *     for(int[] index : indexes){
+     *         AbstractRoom roomHere = room.getShard().roomGrid[index[0]][index[1]];
+     *         if(roomHere.equals(room)){ //Always true
+     *             Bukkit.getLogger().info("true");
+     *         }
+     *     }
+     * </pre>
+     *
+     * Examples:<br>
+     * - Output: [12,3]
+     * - If the RoomSchematic's size is 8x8 and this room is 16x16 big<br>
+     *   Output: [0,0] [0,1] [1,1] [0,1]<br>
+     * @return array of grid's indexes
+     */
     public List<int[]> getGridIndexes(){
         List<int[]> indexes = new ArrayList<>();
         for (int row = startRow; row < startRow + gridHeight; row++) {
@@ -88,16 +107,37 @@ public abstract class AbstractRoom {
         return indexes;
     }
 
+    /**
+     * Returns the relative row and col index's grid index<br>
+     * Example:<br>
+     * - This room is aligned to 8x8, but it's size is 16x16, so it has 4 grid index<br>
+     *   [0,0] [0,1] [1,1] [0,1]<br>
+     *   This room placed on the [3,0] grid index<br>
+     *   Input: [0,1] Output: [3,1]<br>
+     *
+     * <pre>
+     *     int[] index = getIndexOfPiece(1,1);
+     *     Cuboid pieceRegion = getShard().getGridCuboid(index[0], index[1]);
+     * </pre>
+     *
+     * @param relX
+     * @param relZ
+     * @return
+     */
     public int[] getIndexOfPiece(int relX, int relZ){
         if (relX < 0 || relZ < 0) {
             throw new IllegalArgumentException("relX and relZ cannot be negative.");
         }
 
-        int row = startRow + relZ;
-        int col = startCol + relX;
+        int row = startRow + relX;
+        int col = startCol + relZ;
         return new int[]{row, col};
     }
 
+    /**
+     * Physically place down the room
+     * @return This instance
+     */
     public AbstractRoom placeDown(){
         OperationalSchematic schematic = SchematicController.get(schematicName);
         schematic.populate(location, new Vector(0,0,0));
@@ -114,4 +154,6 @@ public abstract class AbstractRoom {
         activeVariantGroups.add(variantGroup);
         return blocks;
     }
+
+    public abstract void destroy();
 }

@@ -1,7 +1,7 @@
 package me.desertfox.dgen.commands;
 
 import me.desertfox.dgen.AbstractDungeon;
-import me.desertfox.dgen.chunk.ShardGenerator;
+import me.desertfox.dgen.shard.ShardGenerator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;

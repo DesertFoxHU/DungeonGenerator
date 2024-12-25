@@ -1,14 +1,12 @@
 package me.desertfox.dgen;
 
-import me.desertfox.dgen.chunk.gens.BetterIsaacGenerator;
-import me.desertfox.dgen.chunk.gens.IsaacLikeGenerator;
+import me.desertfox.dgen.shard.gens.BetterIsaacGenerator;
 import me.desertfox.dgen.commands.DungeonCommand;
 import me.desertfox.dgen.commands.GenerateCommand;
 import me.desertfox.dgen.commands.SchematicCommand;
 import me.desertfox.dgen.commands.tab.GenerateCommandTab;
 import me.desertfox.dgen.room.RoomSchematic;
 import me.desertfox.dgen.schematic.framework.SchematicController;
-import me.desertfox.dgen.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.PluginManager;
