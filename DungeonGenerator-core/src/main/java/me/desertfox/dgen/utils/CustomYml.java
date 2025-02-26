@@ -28,8 +28,8 @@ public class CustomYml {
 	public CustomYml createNew(File file) {
 		if(!file.exists()) {
 			file.getParentFile().mkdirs();
-			p.saveResource(file.getName(), false);
 		}
+		this.file = file;
 
 		config = new YamlConfiguration();
 		config = YamlConfiguration.loadConfiguration(file);

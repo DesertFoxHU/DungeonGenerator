@@ -2,7 +2,7 @@ package me.desertfox.dgen.room;
 
 import me.desertfox.dgen.Direction4;
 import me.desertfox.dgen.shard.DungeonShard;
-import me.desertfox.dgen.utils.Cuboid;
+import me.desertfox.gl.region.Cuboid;
 import org.bukkit.Location;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public class Room extends AbstractRoom {
     }
 
     @Override
-    public void destroy() {
+    public void onDestroy() {
 
     }
 }

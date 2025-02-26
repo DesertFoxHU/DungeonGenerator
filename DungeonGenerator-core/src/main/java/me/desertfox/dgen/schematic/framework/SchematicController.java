@@ -2,8 +2,8 @@ package me.desertfox.dgen.schematic.framework;
 
 import me.desertfox.dgen.Direction4;
 import me.desertfox.dgen.schematic.OperationalSchematic;
-import me.desertfox.dgen.utils.Cuboid;
 import me.desertfox.dgen.utils.CustomYml;
+import me.desertfox.gl.region.Cuboid;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,7 +22,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * {@link SchematicController#init(JavaPlugin, String)} to init

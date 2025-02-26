@@ -6,7 +6,7 @@ import lombok.Setter;
 import me.desertfox.dgen.AbstractDungeon;
 import me.desertfox.dgen.Direction4;
 import me.desertfox.dgen.room.AbstractRoom;
-import me.desertfox.dgen.utils.Cuboid;
+import me.desertfox.gl.region.Cuboid;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
@@ -390,7 +390,7 @@ public class DungeonShard {
      * The code first clears the area then starts the generation process
      */
     public void populate(Object... params){
-        region.clearRegion();
+        region.clearRegion(true);
         if(debug){
             drawDebug2DBox();
         }
@@ -402,11 +402,11 @@ public class DungeonShard {
      * Clears this shard cell blocks<br>
      * It also includes the debug blocks
      */
-    public void clear(){
-        region.expand(Cuboid.CuboidDirection.Down, 1).clearRegion();
+    public void clear(boolean applyPyhsics){
+        region.expand(Cuboid.CuboidDirection.Down, 1).clearRegion(applyPyhsics);
         for (AbstractRoom[] abstractRooms : roomGrid) {
             for(AbstractRoom room : abstractRooms){
-                if(room != null) room.destroy();
+                if(room != null) room.onDestroy();
             }
             Arrays.fill(abstractRooms, null);
         }

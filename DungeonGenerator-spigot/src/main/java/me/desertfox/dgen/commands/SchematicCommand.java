@@ -4,8 +4,8 @@ import me.desertfox.dgen.DungeonGenerator;
 import me.desertfox.dgen.schematic.OperationalSchematic;
 import me.desertfox.dgen.schematic.framework.Rotation;
 import me.desertfox.dgen.schematic.framework.SchematicController;
-import me.desertfox.dgen.utils.Cuboid;
 import me.desertfox.dgen.utils.CustomYml;
+import me.desertfox.gl.region.Cuboid;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Structure;
@@ -51,6 +51,7 @@ public class SchematicCommand implements CommandExecutor {
 
         if(args.length == 0){
             player.sendMessage("§e/schema create [Name]");
+            player.sendMessage("§e/schema rescan §f- rescans the structure | look at the structure block");
             player.sendMessage("§e/schema load [Name]");
             player.sendMessage("§e/schema setPos1 §f- Sets the position which block are you facing");
             player.sendMessage("§e/schema setPos2 §f- Sets the position which block are you facing");
@@ -69,6 +70,29 @@ public class SchematicCommand implements CommandExecutor {
                 editSession.remove(player);
                 player.sendMessage("§cYou stopped editing!");
                 return false;
+            }
+            if(args[0].equalsIgnoreCase("rescan")){
+                Block block = player.getTargetBlockExact(5);
+                if (block == null) {
+                    return false;
+                }
+
+                if(block.getState() instanceof Structure sblock){
+                    String name = sblock.getStructureName().split("minecraft:")[1].split(".yml")[0];
+                    Location location = sblock.getLocation();
+                    Location start = location.clone().add(1, 1, 1);
+                    Location end = start.clone().add(sblock.getStructureSize().getX()-1, sblock.getStructureSize().getY()-1, sblock.getStructureSize().getZ()-1);
+
+                    Cuboid cuboid = new Cuboid(start, end);
+
+                    SchematicController.saveSchematic(
+                            new CustomYml(DungeonGenerator.instance).createNew("schemas" + File.separator + name + ".yml", false),
+                            start,
+                            cuboid,
+                            null
+                    );
+                    player.sendMessage("§2Successfully saved as §6" + name + "§2!");
+                }
             }
             if(args[0].equalsIgnoreCase("setPos1")){
                 Block block = player.getTargetBlockExact(5);

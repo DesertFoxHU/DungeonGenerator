@@ -42,7 +42,7 @@ public class DungeonCommand implements CommandExecutor {
                     player.sendMessage("§4§lDidn't found dungeon by id: " + id);
                     return false;
                 }
-                dungeon.clearQueue();
+                dungeon.clearQueue(false);
                 player.sendMessage("§2§lStarted clearing!");
             }
         }

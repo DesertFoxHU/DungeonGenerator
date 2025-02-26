@@ -2,8 +2,7 @@ package me.desertfox.dgen.schematic;
 
 import lombok.Getter;
 import me.desertfox.dgen.schematic.framework.Rotation;
-import me.desertfox.dgen.utils.Cuboid;
-import org.bukkit.Bukkit;
+import me.desertfox.gl.region.Cuboid;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -33,7 +32,7 @@ public class OperationalSchematic implements Cloneable {
     this.variantGroups = variantGroups;
   }
 
-  public List<Block> populateVariantGroup(String variantGroup, Location start, Vector shift, boolean onlyReplaceAir){
+  public List<Block> populateVariantGroup(String variantGroup, Location start, Vector shift, boolean onlyReplaceAir, boolean applyPhysics){
     List<Block> blocks = new ArrayList<>();
     start = start.clone().add(shift);
     for(Data d : variantGroups.get(variantGroup)){
@@ -43,29 +42,29 @@ public class OperationalSchematic implements Cloneable {
       Block block = new Location(start.getWorld(), X, Y, Z).getBlock();
       if(onlyReplaceAir){
         if(block.getType() == Material.AIR){
-          block.setBlockData(d.bData);
+          block.setBlockData(d.bData, applyPhysics);
           blocks.add(block);
         }
         continue;
       }
-      block.setBlockData(d.bData);
+      block.setBlockData(d.bData, applyPhysics);
       blocks.add(block);
     }
     return blocks;
   }
 
   public List<Block> populate(Location start, Vector shift){
-    return populate(start, shift, false, false);
+    return populate(start, shift, false, false, true);
   }
 
   public List<Block> populate(Location start, Vector shift, boolean clearArea){
-    return populate(start, shift, false, clearArea);
+    return populate(start, shift, false, clearArea, true);
   }
 
-  public List<Block> populate(Location start, Vector shift, boolean onlyReplaceAir, boolean clearArea){
+  public List<Block> populate(Location start, Vector shift, boolean onlyReplaceAir, boolean clearArea, boolean applyPhysics){
     List<Block> blocks = new ArrayList<>();
     if(clearArea){
-      getCuboid(start, shift).clearRegion();
+      getCuboid(start, shift).clearRegion(applyPhysics);
     }
     start = start.clone().add(shift);
     for(Data d : data){

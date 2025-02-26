@@ -5,7 +5,7 @@ import me.desertfox.dgen.Direction4;
 import me.desertfox.dgen.shard.DungeonShard;
 import me.desertfox.dgen.schematic.OperationalSchematic;
 import me.desertfox.dgen.schematic.framework.SchematicController;
-import me.desertfox.dgen.utils.Cuboid;
+import me.desertfox.gl.region.Cuboid;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -67,6 +67,21 @@ public abstract class AbstractRoom {
                         grid = grid.expand(Cuboid.CuboidDirection.Up, -1);
                         grid.getBlocks().forEach(b -> b.setType(Material.GREEN_WOOL));
                     }
+                }
+            }
+        }
+    }
+
+    public void remove(){
+        onDestroy();
+        for (int row = startRow; row < startRow + gridHeight; row++) {
+            for (int col = startCol; col < startCol + gridWidth; col++) {
+                if (!(col >= 0 && col < shard.roomGrid[0].length)) {
+                    Bukkit.getLogger().info("Skipping column: " + col + " (out of bounds) " + location);
+                }
+
+                if (row >= 0 && row < shard.roomGrid.length && col >= 0 && col < shard.roomGrid[0].length) {
+                    shard.roomGrid[row][col] = null;
                 }
             }
         }
@@ -150,10 +165,10 @@ public abstract class AbstractRoom {
             return null;
         }
         OperationalSchematic schematic = SchematicController.get(schematicName);
-        List<Block> blocks = schematic.populateVariantGroup(variantGroup, location, new Vector(0,0,0), false);
+        List<Block> blocks = schematic.populateVariantGroup(variantGroup, location, new Vector(0,0,0), false, false);
         activeVariantGroups.add(variantGroup);
         return blocks;
     }
 
-    public abstract void destroy();
+    public abstract void onDestroy();
 }

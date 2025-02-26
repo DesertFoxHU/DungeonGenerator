@@ -6,13 +6,11 @@ me\desertfox\dgen\schematic\framework\Rotation.class
 me\desertfox\dgen\AbstractDungeon.class
 me\desertfox\dgen\shard\gens\WeightedSimpleGenerator$1.class
 me\desertfox\dgen\AbstractDungeon$Builder.class
-me\desertfox\dgen\utils\Cuboid.class
 me\desertfox\dgen\shard\gens\BetterIsaacGenerator.class
 me\desertfox\dgen\shard\gens\IsaacLikeGenerator.class
 me\desertfox\dgen\AbstractDungeon$1.class
 me\desertfox\dgen\Direction4.class
 me\desertfox\dgen\shard\DungeonShard$1.class
-me\desertfox\dgen\utils\Cuboid$CuboidIterator.class
 me\desertfox\dgen\room\RoomSchematic.class
 me\desertfox\dgen\shard\gens\MazeGenerator$1.class
 me\desertfox\dgen\utils\CustomYml.class
@@ -37,5 +35,4 @@ me\desertfox\dgen\shard\gens\ConnectedDoorsGenerator$1.class
 me\desertfox\dgen\schematic\OperationalSchematic$Data.class
 me\desertfox\dgen\shard\DungeonShard.class
 me\desertfox\dgen\commands\DungeonCommandTab.class
-me\desertfox\dgen\utils\Cuboid$CuboidDirection.class
 me\desertfox\dgen\shard\gens\SimpleGenerator.class

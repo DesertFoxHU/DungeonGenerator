@@ -9,7 +9,7 @@ import me.desertfox.dgen.room.Room;
 import me.desertfox.dgen.room.RoomSchematic;
 import me.desertfox.dgen.schematic.OperationalSchematic;
 import me.desertfox.dgen.schematic.framework.SchematicController;
-import me.desertfox.dgen.utils.Cuboid;
+import me.desertfox.gl.region.Cuboid;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -184,12 +184,12 @@ public abstract class AbstractDungeon {
      * Clears the blocks in the dungeon on update queue<br>
      * It also includes the debug blocks
      */
-    public void clearQueue(){
+    public void clearQueue(boolean applyPhysics){
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
                 DungeonShard cell = cells[i][j];
                 updateOnQueue(d -> {
-                    cell.clear();
+                    cell.clear(applyPhysics);
                 });
             }
         }
@@ -199,11 +199,11 @@ public abstract class AbstractDungeon {
      * Clears the blocks in the dungeon instantly<br>
      * It also includes the debug blocks
      */
-    public void clear(){
+    public void clear(boolean applyPhysics){
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
                 DungeonShard cell = cells[i][j];
-                cell.clear();
+                cell.clear(applyPhysics);
             }
         }
     }
@@ -258,6 +258,18 @@ public abstract class AbstractDungeon {
             return false;
         }
         return shard.getRegion().contains(start);
+    }
+
+    public AbstractRoom changeRoomClass(AbstractRoom currentRoom, Class<? extends AbstractRoom> newClass){
+        currentRoom.remove();
+        AbstractRoom room = null;
+        try {
+            room = newClass.getConstructor(DungeonShard.class, String.class, Location.class, Cuboid.class, List.class)
+                    .newInstance(currentRoom.getShard(), currentRoom.getSchematicName(), start, currentRoom.getRegion(), currentRoom.getDoors());
+        } catch (InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+        return room;
     }
 
     /**
@@ -374,7 +386,7 @@ public abstract class AbstractDungeon {
     public World getWorld() { return start.getWorld(); }
 
     /**
-     * Set all of the shards' generator class and debug info
+     * Set all the shards' generator class and debug info
      * @param debug Pass debug data
      * @param generator The generator
      */
@@ -403,16 +415,16 @@ public abstract class AbstractDungeon {
      * Clears the dungeon's region using the {@link AbstractDungeon#clearRegion} field<br>
      * If there isn't a set clear region then the default region will be used<br>
      */
-    public void clearRegion(){
-        clearRegion(null);
+    public void clearRegion(boolean applyPhysics){
+        clearRegion(null, applyPhysics);
     }
 
     /**
      * Clears the dungeon's region using the {@link AbstractDungeon#clearRegion} field<br>
      * If there isn't a set clear region then the default region will be used<br>
      */
-    public void clearRegion(Predicate<? super Entity> kill){
-        clearRegion.forEach(b -> b.setType(Material.AIR));
+    public void clearRegion(Predicate<? super Entity> kill, boolean applyPhysics){
+        clearRegion.forEach(b -> b.setType(Material.AIR, applyPhysics));
         for(Entity entity : clearRegion.getWorld().getEntities().stream().filter(kill).toList()) {
             if (clearRegion.contains(entity.getLocation())) {
                 entity.remove();
@@ -422,7 +434,7 @@ public abstract class AbstractDungeon {
 
     /**
      * Sets the current clear region which is used when<br>
-     * {@link AbstractDungeon#clearRegion()}
+     * {@link AbstractDungeon#clearRegion}
      * @param region
      */
     public void setClearRegion(Cuboid region){
